@@ -1,0 +1,49 @@
+# Unity-generated directories
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Bb]uild/
+/[Bb]uilds/
+/Web Build/
+
+# Local implementation backups and editor caches
+/.implementation-backups/
+/.vs/
+/.vscode/
+/.idea/
+/.codex/
+/.agents/
+
+# Generated solution/project files
+/*.csproj
+/*.sln
+/*.slnx
+/*.suo
+/*.user
+/*.userprefs
+/*.pidb
+/*.booproj
+/*.unityproj
+/*.svd
+/*.opendb
+/*.VC.db
+
+# Local configuration and credentials
+/.env
+/.env.*
+*.keystore
+*.jks
+
+# Builds and captures
+*.apk
+*.aab
+*.unitypackage
+/memoryprofiler/
+/[Rr]ecordings/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

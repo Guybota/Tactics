@@ -1,0 +1,7 @@
+{
+  "name": "Tactics.Core",
+  "rootNamespace": "Tactics.Core",
+  "references": [],
+  "autoReferenced": true,
+  "noEngineReferences": true
+}

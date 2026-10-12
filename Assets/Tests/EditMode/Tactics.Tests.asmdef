@@ -1,0 +1,12 @@
+{
+  "name": "Tactics.Tests",
+  "references": [
+    "Tactics.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
