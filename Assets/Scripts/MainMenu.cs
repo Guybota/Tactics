@@ -45,7 +45,8 @@ public class MainMenu : MonoBehaviour
     private static CustomMapData pendingEditorMap;
     public static CustomMapData SelectedCustomMap => selectedCustomMap?.Clone();
     private CustomMapSelect customMapSelect;
-    private OnlineMatchMenu onlineMenu;
+    [SerializeField] private OnlineMatchMenu onlineMenu;
+    [SerializeField] private Button onlineButton;
     public OnlineMatchMenu OnlineMenu => onlineMenu;
     internal static GameSave TakePendingSave() { var save = pendingSave; pendingSave = null; return save; }
     internal static CustomMapData TakePendingEditorMap() { var map = pendingEditorMap; pendingEditorMap = null; return map; }
@@ -119,7 +120,7 @@ public class MainMenu : MonoBehaviour
         mapMenu.SetActive(false);
         createmapMenu.SetActive(false);
         customMapSelect = GetComponent<CustomMapSelect>(); customMapSelect.Initialize(this);
-        onlineMenu = GetComponent<OnlineMatchMenu>() ?? gameObject.AddComponent<OnlineMatchMenu>();
+        if (onlineMenu == null || onlineButton == null) throw new InvalidOperationException("The editable Online UI is missing from this scene.");
         onlineMenu.Initialize(this);
     }
 

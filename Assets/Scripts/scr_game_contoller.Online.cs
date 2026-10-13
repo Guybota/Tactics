@@ -17,7 +17,7 @@ public partial class scr_game_contoller
     private float nextOnlinePoll;
     private string onlineMessage;
     private TMP_Text onlineStatus;
-    private RectTransform onlineHud;
+    [SerializeField] private OnlineMatchHud onlineHudView;
     private Button onlineRefresh, onlineRetry;
     private readonly List<Button> onlineEndTurnButtons = new List<Button>();
     public bool IsOnlineMatch => onlineSession != null;
@@ -94,7 +94,7 @@ public partial class scr_game_contoller
         staging.SetActive(true); gameMap.Populate_adjacency_list();
         ApplyOnlineSnapshot(true);
         uiManager.Update_tile_info(null);
-        CreateOnlineHud(); nextOnlinePoll = Time.unscaledTime + 5;
+        BindOnlineHud(); nextOnlinePoll = Time.unscaledTime + 5;
     }
 
     public async void DispatchAction(MatchAction action)
@@ -213,32 +213,23 @@ public partial class scr_game_contoller
         { nextOnlinePoll = Time.unscaledTime + 5; PollOnline(); }
     }
     private async void PollOnline() => await RefreshOnlineAsync();
-    private async void RefreshOnlineButton() => await RefreshOnlineAsync();
-    private async void RetryOnlineButton() => await RetryOnlineAsync();
-
-    private void CreateOnlineHud()
+    private void BindOnlineHud()
     {
-        if (onlineHud != null) { onlineHud.gameObject.SetActive(false); Destroy(onlineHud.gameObject); }
+        if (onlineHudView == null) throw new InvalidOperationException("The editable Online HUD is missing from this scene.");
+        onlineHudView.Bind(this);
+        onlineStatus = onlineHudView.Status;
+        onlineRefresh = onlineHudView.Refresh;
+        onlineRetry = onlineHudView.Retry;
         onlineEndTurnButtons.Clear();
-        var canvas = uiManager.turn_info.GetComponentInParent<Canvas>();
-        var panel = CustomMapUi.Rect(canvas.transform, "Online status", new Vector2(650, 140), new Vector2(-345, 85), new Vector2(1, 0));
-        onlineHud = panel;
-        CustomMapUi.PaperBackground(panel);
-        onlineStatus = CustomMapUi.Label(panel, "Status", "Online", new Vector2(620, 45), new Vector2(0, 40), 30);
-        onlineRefresh = OnlineHudButton(panel, "Refresh", new Vector2(-210, -25), RefreshOnlineButton);
-        onlineRetry = OnlineHudButton(panel, "Retry", new Vector2(0, -25), RetryOnlineButton);
-        OnlineHudButton(panel, "Copy invite", new Vector2(210, -25),
-            () => { GUIUtility.systemCopyBuffer = onlineSession.CaptureReconnectData().MatchId; onlineMessage = "Invitation copied."; });
         foreach (var root in new[] { uiManager.buttons, uiManager.main_menu })
             foreach (var button in root.GetComponentsInChildren<Button>(true))
                 for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
                     if (button.onClick.GetPersistentMethodName(i) == "Finalize_turn") onlineEndTurnButtons.Add(button);
     }
-    private static Button OnlineHudButton(Transform panel, string title, Vector2 position, UnityEngine.Events.UnityAction action)
+    public void CopyOnlineInvitation()
     {
-        var button = CustomMapUi.Button(panel, title, title, new Vector2(185, 70), position, action);
-        TacticsUiSkin.Current.ApplyButton(button); ((Image)button.targetGraphic).color = Color.white;
-        button.GetComponent<Outline>().enabled = false; button.gameObject.AddComponent<PaperButtonLabel>();
-        return button;
+        if (!IsOnlineMatch) return;
+        GUIUtility.systemCopyBuffer = onlineSession.CaptureReconnectData().MatchId;
+        onlineMessage = "Invitation copied.";
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -54,8 +55,9 @@ public sealed class OnlineMenuIntegrationTests
         foreach (var button in firstMenu.GetComponentsInChildren<Button>(true))
             if (button.name == "Online multiplayer button") entry = button;
         Assert.That(entry, Is.Not.Null);
-        Assert.That(entry.onClick.GetPersistentEventCount(), Is.Zero,
-            "Cloning Play must not retain its persistent scene/menu actions.");
+        Assert.That(entry.onClick.GetPersistentEventCount(), Is.EqualTo(1));
+        Assert.That(entry.onClick.GetPersistentMethodName(0), Is.EqualTo("PressOnline"));
+        Assert.That(entry.onClick.GetPersistentTarget(0), Is.SameAs(mainMenu));
         Assert.That(entry.transform.parent.GetComponent<VerticalLayoutGroup>(), Is.Not.Null,
             "The Online entry must participate in the existing vertical menu layout.");
         object before = ServicesState();
@@ -109,7 +111,7 @@ public sealed class OnlineMenuIntegrationTests
                 scaler.matchWidthOrHeight = 1;
                 yield return null;
                 Canvas.ForceUpdateCanvases();
-                Call(onlineMenu, "FitPanel");
+                LayoutRebuilder.ForceRebuildLayoutImmediate(overlay);
                 var root = (RectTransform)canvas.transform;
                 var corners = new Vector3[4];
                 panel.GetWorldCorners(corners);
@@ -119,7 +121,7 @@ public sealed class OnlineMenuIntegrationTests
                     Assert.That(local.x, Is.InRange(root.rect.xMin - 1, root.rect.xMax + 1));
                     Assert.That(local.y, Is.InRange(root.rect.yMin - 1, root.rect.yMax + 1));
                 }
-                Assert.That(panel.localScale.x, Is.EqualTo(panel.localScale.y).Within(.001f));
+                Assert.That(panel.localScale, Is.EqualTo(Vector3.one));
             }
             Assert.That(((TMP_InputField)Field(onlineMenu, "invitation")).characterLimit, Is.EqualTo(64));
             Assert.That(((Button)Field(onlineMenu, "create")).interactable, Is.True);
@@ -132,5 +134,33 @@ public sealed class OnlineMenuIntegrationTests
             scaler.referenceResolution = originalReference;
             scaler.matchWidthOrHeight = originalMatch;
         }
+    }
+
+    [UnityTest]
+    public IEnumerator OpeningOnlinePreservesAuthoredInstancesAndManualVisualChanges()
+    {
+        var overlay = (RectTransform)Field(onlineMenu, "overlay");
+        var create = (Button)Field(onlineMenu, "create");
+        var label = create.GetComponentInChildren<TMP_Text>();
+        var rect = (RectTransform)create.transform;
+        Vector2 position = rect.anchoredPosition + new Vector2(13, -11);
+        Vector2 size = new Vector2(680, 76);
+        Color color = new Color(.8f, .9f, .7f);
+        rect.anchoredPosition = position; rect.sizeDelta = size;
+        label.fontSize = 27; label.fontSizeMax = 27; label.color = color;
+        // TMP lazily creates its internal caret mesh when an input first becomes active.
+        int[] originalInstances = overlay.GetComponentsInChildren<Transform>(true)
+            .Where(t => t.GetComponent<TMP_SelectionCaret>() == null).Select(t => t.GetInstanceID()).ToArray();
+        Call(mainMenu, "PressOnline"); yield return null;
+        Call(mainMenu, "PressBack"); yield return null;
+        Call(mainMenu, "PressOnline"); yield return null;
+        var currentInstances = overlay.GetComponentsInChildren<Transform>(true)
+            .Where(t => t.GetComponent<TMP_SelectionCaret>() == null).ToArray();
+        Assert.That(currentInstances.Select(t => t.GetInstanceID()), Is.EquivalentTo(originalInstances),
+            "Unexpected objects: " + string.Join(", ", currentInstances.Where(t => !originalInstances.Contains(t.GetInstanceID())).Select(t => t.name)));
+        Assert.That(rect.anchoredPosition, Is.EqualTo(position)); Assert.That(rect.sizeDelta, Is.EqualTo(size));
+        Assert.That(label.fontSizeMax, Is.EqualTo(27)); Assert.That(label.color, Is.EqualTo(color));
+        Assert.That(rect.localScale, Is.EqualTo(Vector3.one));
+        Assert.That(create.onClick.GetPersistentMethodName(0), Is.EqualTo("CreateFromButton"));
     }
 }

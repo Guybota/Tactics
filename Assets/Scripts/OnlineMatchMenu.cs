@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,19 @@ public sealed class OnlineMatchMenu : MonoBehaviour
     private MainMenu menu;
     private IOnlineMatchMenuConnection connection;
     private Action<MatchLobbyReply, OnlineMatchSession> launch;
-    private RectTransform overlay, panel, setup, lobbyView;
-    private TMP_Text heading, description, status;
-    private TMP_InputField invitation, lobbyInvitation;
-    private Button create, join, resume, build, storm, copy, refresh, open, another;
-    private readonly List<Button> raceButtons = new List<Button>();
+    [Header("Scene views — edit their RectTransforms and visual components")]
+    [SerializeField] private RectTransform overlay, panel, setup, lobbyView;
+    [SerializeField] private TMP_Text heading, description, status;
+    [SerializeField] private TMP_InputField invitation, lobbyInvitation;
+    [SerializeField] private ScrollRect viewScroll;
+    [SerializeField] private Button create, join, resume, build, storm, copy, refresh, open, another;
+    [Tooltip("Same order as the main menu's race catalogue.")]
+    [SerializeField] private List<Button> raceButtons = new List<Button>();
+    [SerializeField] private Color selectedArmyTint = new Color(.78f, .90f, 1);
+    [SerializeField] private Color errorColor = new Color(.55f, .13f, .08f);
+    private Color normalStatusColor;
+    private Color[] armyColors;
+    private bool initialized;
     private MatchLobbyReply lobby;
     private bool building, battleRoyale, requestRunning;
     private int raceIndex, viewVersion, pollFailures;
@@ -43,12 +52,21 @@ public sealed class OnlineMatchMenu : MonoBehaviour
     public void Initialize(MainMenu target, IOnlineMatchMenuConnection onlineConnection = null,
         Action<MatchLobbyReply, OnlineMatchSession> openMatch = null)
     {
-        if (overlay != null) return;
+        if (initialized) return;
+        if (overlay == null || panel == null || setup == null || lobbyView == null || heading == null
+            || description == null || status == null || invitation == null || lobbyInvitation == null
+            || new[] { create, join, resume, build, storm, copy, refresh, open, another }.Any(b => b == null)
+            || raceButtons.Count != MainMenu.classes.Count || raceButtons.Any(b => b == null))
+            throw new InvalidOperationException("The editable Online UI references are missing from this scene.");
         menu = target ?? throw new ArgumentNullException(nameof(target));
         connection = onlineConnection ?? new Connection();
         launch = openMatch ?? (Action<MatchLobbyReply, OnlineMatchSession>)OnlineMatchRuntime.Enter;
-        BuildViews();
-        InstallMenuButton();
+        normalStatusColor = status.color;
+        armyColors = raceButtons.Select(b => ((Image)b.targetGraphic).color).ToArray();
+        overlay.GetComponent<UiBackAction>().Back = menu.PressBack;
+        initialized = true;
+        ShowLobby(null);
+        UpdateControls();
         Hide();
     }
 
@@ -58,11 +76,11 @@ public sealed class OnlineMatchMenu : MonoBehaviour
         viewVersion++;
         overlay.gameObject.SetActive(true);
         overlay.SetAsLastSibling();
+        if (viewScroll != null) { viewScroll.StopMovement(); viewScroll.horizontalNormalizedPosition = .5f; viewScroll.verticalNormalizedPosition = 1; }
         nextPoll = Time.unscaledTime + 5;
         ShowLobby(lobby);
         if (lobby == null) SetStatus("Create a private match, or enter an invitation from a friend.");
         UpdateControls();
-        FitPanel();
     }
 
     public void Hide()
@@ -78,15 +96,15 @@ public sealed class OnlineMatchMenu : MonoBehaviour
         _ = RefreshLobbyAsync();
     }
 
-    private void LateUpdate() { if (IsVisible) FitPanel(); }
-
-    private void FitPanel()
-    {
-        var canvas = overlay.GetComponentInParent<Canvas>().rootCanvas.transform as RectTransform;
-        if (canvas == null) return;
-        float scale = Mathf.Min(1, Mathf.Max(0.1f, (canvas.rect.width - 40) / 900), Mathf.Max(0.1f, (canvas.rect.height - 40) / 880));
-        panel.localScale = Vector3.one * scale;
-    }
+    // Persistent callbacks are visible on the scene Buttons' On Click events.
+    public async void CreateFromButton() => await CreateAsync();
+    public async void JoinFromButton() => await JoinAsync();
+    public async void ResumeFromButton() => await ResumeAsync();
+    public async void RefreshFromButton() => await RefreshLobbyAsync();
+    public async void OpenFromButton() => await OpenBoardAsync();
+    public void ChooseArmy(int index) { if (requestRunning) return; raceIndex = Mathf.Clamp(index, 0, raceButtons.Count - 1); UpdateControls(); }
+    public void ToggleBuildMode() { building = !building; if (!building) battleRoyale = false; UpdateControls(); }
+    public void ToggleStormMode() { battleRoyale = !battleRoyale; if (battleRoyale) building = true; UpdateControls(); }
 
     public async Task CreateAsync()
     {
@@ -273,7 +291,7 @@ public sealed class OnlineMatchMenu : MonoBehaviour
         for (int index = 0; index < raceButtons.Count; index++)
         {
             raceButtons[index].interactable = editable;
-            ((Image)raceButtons[index].targetGraphic).color = index == raceIndex ? new Color(.78f, .90f, 1) : Color.white;
+            ((Image)raceButtons[index].targetGraphic).color = index == raceIndex ? armyColors[index] * selectedArmyTint : armyColors[index];
         }
         build.GetComponentInChildren<TMP_Text>().text = "Build castles: " + (building ? "On" : "Off");
         storm.GetComponentInChildren<TMP_Text>().text = "Storm: " + (battleRoyale ? "On" : "Off");
@@ -286,90 +304,7 @@ public sealed class OnlineMatchMenu : MonoBehaviour
     {
         if (status == null) return;
         status.text = message;
-        status.color = error ? new Color(.55f, .13f, .08f) : CustomMapUi.Ink;
-    }
-
-    private void InstallMenuButton()
-    {
-        Button template = null;
-        foreach (var candidate in menu.firstMenu.GetComponentsInChildren<Button>(true))
-            for (int index = 0; index < candidate.onClick.GetPersistentEventCount(); index++)
-                if (candidate.onClick.GetPersistentMethodName(index) == "PressPlay") template = candidate;
-        if (template == null) throw new InvalidOperationException("The main menu Play button is missing.");
-        var online = Instantiate(template, template.transform.parent);
-        online.name = "Online multiplayer button";
-        // Remove cloned persistent listeners too; RemoveAllListeners only removes runtime listeners.
-        online.onClick = new Button.ButtonClickedEvent();
-        online.onClick.AddListener(menu.PressOnline);
-        online.transform.SetSiblingIndex(template.transform.GetSiblingIndex() + 1);
-        online.GetComponentInChildren<TMP_Text>().text = "Online";
-    }
-
-    private void BuildViews()
-    {
-        var canvas = menu.firstMenu.GetComponentInParent<Canvas>().rootCanvas;
-        overlay = CustomMapUi.Rect(canvas.transform, "Online match menu", Vector2.zero, Vector2.zero);
-        overlay.gameObject.SetActive(false);
-        CustomMapUi.Stretch(overlay);
-        CustomMapUi.Background(overlay, new Color(0, 0, 0, .7f));
-        var sort = overlay.gameObject.AddComponent<Canvas>(); sort.overrideSorting = true; sort.sortingOrder = 90;
-        overlay.gameObject.AddComponent<GraphicRaycaster>();
-        overlay.gameObject.AddComponent<UiBackAction>().Back = menu.PressBack;
-        panel = CustomMapUi.Rect(overlay, "Online menu paper", new Vector2(900, 880), Vector2.zero);
-        CustomMapUi.PaperBackground(panel);
-        heading = CustomMapUi.Label(panel, "Online menu title", "Online matches", new Vector2(780, 65), new Vector2(0, 375), 54);
-        description = CustomMapUi.Label(panel, "Online menu description", "", new Vector2(780, 85), new Vector2(0, 310), 30);
-        setup = CustomMapUi.Rect(panel, "Online match setup", Vector2.zero, Vector2.zero); CustomMapUi.Stretch(setup);
-        int count = MainMenu.classes.Count;
-        float width = 760f / Mathf.Max(1, count);
-        for (int index = 0; index < count; index++)
-        {
-            int selected = index;
-            raceButtons.Add(ActionButton(setup, "Online army " + index, MainMenu.classes[index].DisplayName,
-                new Vector2(width - 10, 70), new Vector2(-380 + width * (index + .5f), 220),
-                () => { raceIndex = selected; UpdateControls(); }));
-        }
-        build = ActionButton(setup, "Online build mode", "", new Vector2(350, 70), new Vector2(-185, 140),
-            () => { building = !building; if (!building) battleRoyale = false; UpdateControls(); });
-        storm = ActionButton(setup, "Online storm mode", "", new Vector2(350, 70), new Vector2(185, 140),
-            () => { battleRoyale = !battleRoyale; if (battleRoyale) building = true; UpdateControls(); });
-        create = ActionButton(setup, "Online create match", "Create match", new Vector2(720, 70), new Vector2(0, 55), () => { _ = CreateAsync(); });
-        CustomMapUi.Label(setup, "Invitation prompt", "Have an invitation?", new Vector2(720, 45), new Vector2(0, -25), 32);
-        invitation = InvitationInput(setup, "Online invitation input", new Vector2(530, 70), new Vector2(-95, -85), "Paste invitation");
-        join = ActionButton(setup, "Online join match", "Join", new Vector2(170, 70), new Vector2(280, -85), () => { _ = JoinAsync(); });
-        resume = ActionButton(setup, "Online resume match", "Resume last match", new Vector2(720, 70), new Vector2(0, -175), () => { _ = ResumeAsync(); });
-        lobbyView = CustomMapUi.Rect(panel, "Online waiting lobby", Vector2.zero, Vector2.zero); CustomMapUi.Stretch(lobbyView);
-        CustomMapUi.Label(lobbyView, "Your invitation label", "Invitation", new Vector2(720, 40), new Vector2(0, 245), 32);
-        lobbyInvitation = InvitationInput(lobbyView, "Online lobby invitation", new Vector2(720, 70), new Vector2(0, 195), "");
-        lobbyInvitation.readOnly = true;
-        copy = ActionButton(lobbyView, "Online copy invitation", "Copy invitation", new Vector2(720, 70), new Vector2(0, 110), CopyInvitation);
-        refresh = ActionButton(lobbyView, "Online refresh lobby", "Check lobby / retry", new Vector2(720, 70), new Vector2(0, 25), () => { _ = RefreshLobbyAsync(); });
-        open = ActionButton(lobbyView, "Online open board", "Open match", new Vector2(720, 70), new Vector2(0, -60), () => { _ = OpenBoardAsync(); });
-        another = ActionButton(lobbyView, "Online another match", "Choose another match", new Vector2(720, 70), new Vector2(0, -175), ChooseAnotherMatch);
-        status = CustomMapUi.Label(panel, "Online menu status", "", new Vector2(720, 125), new Vector2(0, -285), 32);
-        ActionButton(panel, "Online back", "Back", new Vector2(330, 70), new Vector2(0, -385), menu.PressBack);
-        UpdateControls();
-    }
-
-    private static Button ActionButton(Transform parent, string name, string caption, Vector2 size, Vector2 position, UnityEngine.Events.UnityAction action)
-    {
-        var button = CustomMapUi.Button(parent, name, caption, size, position, action);
-        TacticsUiSkin.Current.ApplyButton(button);
-        ((Image)button.targetGraphic).color = Color.white;
-        foreach (var outline in button.GetComponents<Outline>()) outline.enabled = false;
-        button.gameObject.AddComponent<PaperButtonLabel>();
-        return button;
-    }
-
-    private static TMP_InputField InvitationInput(Transform parent, string name, Vector2 size, Vector2 position, string placeholder)
-    {
-        var input = CustomMapUi.NameInput(parent, size, position);
-        input.name = name; input.characterLimit = 64; input.lineType = TMP_InputField.LineType.SingleLine;
-        input.textComponent.fontSize = 30;
-        ((TMP_Text)input.placeholder).text = placeholder;
-        input.GetComponent<Image>().color = new Color(.99f, .92f, .77f);
-        input.gameObject.AddComponent<Outline>().effectColor = CustomMapUi.Ink;
-        return input;
+        status.color = error ? errorColor : normalStatusColor;
     }
 
     private sealed class Connection : IOnlineMatchMenuConnection

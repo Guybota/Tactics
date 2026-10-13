@@ -170,6 +170,28 @@ The client now rejects replies changing the map size, participant races, immutab
 terrain/rules or existing unit identities before persisting them. Dynamic recruits,
 deaths, castle ownership and storm flags remain valid confirmed changes.
 
+## Editable online UI — 2026-10-13
+
+Every online visual is now authored in the scene before Play Mode. In **Main Menu**,
+edit **Online multiplayer button** inside the existing first menu, or expand
+**Online match menu → Online menu paper → Viewport → Online menu content** for
+the setup, army selectors, invitation fields, waiting lobby, status and Back button.
+The overlay and waiting lobby start inactive; enable them temporarily to preview edits.
+In **Main Scene**, edit **Online status** and its status/Refresh/Retry/Copy children.
+It also starts inactive and is enabled when an online board opens.
+
+`MainMenu`, `OnlineMatchMenu`, the board controller and `OnlineMatchHud` expose their
+scene references in the Inspector. Button On Click callbacks are persistent and visible.
+Runtime code changes match data and control availability while preserving the authored
+RectTransforms, fonts, sprites and base colors. Native layout/scroll components handle
+smaller screens with Transform Scale at one; adjust the paper's LayoutElement preferred
+dimensions for its outer size. The explicit editor menu **Tactics → UI → Add editable
+online interface to scenes** only authors missing views and leaves existing views intact.
+
+Verification for this authoring change: **2 EditMode tests** confirm that every menu/HUD
+reference exists in the saved scenes; **12 PlayMode tests** cover online menu/board
+integration, native layouts, persistent callbacks and preservation of manual visual edits.
+
 ## WebGL publication verification — 2026-10-13
 
 The WebGL release from source commit `e1b662151f6a30401a7b2a233421ac83632e48b1`
