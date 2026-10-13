@@ -222,3 +222,30 @@ Publication status checked at **2026-10-13 14:48 UTC**: Butler reports build
 `2120142` as `queued`. The current completed channel head is still `2116176`;
 the public browser page was observed serving that earlier build. Upload and Git
 push succeeded; browser activation is pending itch.io's processing queue.
+
+## Editable UI WebGL release verification — 2026-10-13
+
+The Unity reload dialog was confirmed and the editor connection recovered. After
+reloading the final scene files, both scene-authoring EditMode tests and all four
+online-menu PlayMode tests passed again. The editor was left on Main Menu with the
+OnlineMatchMenu component selected so its serialized references can be edited.
+
+Source `86f38f4553142e5c0bfa1c92e1a1987bcd390348` built successfully with the same
+Web release profile: **524.18 seconds, 20.08 MiB, zero errors**, 346 existing
+package/compiler warnings. `Tools/PrepareItchWeb.ps1` enabled browser journal
+autosync and recorded the source revision in the build's `release.json`.
+
+The actual WebGL build was checked in the browser: Online is visible in the main
+menu, its authored setup panel opens, and the persistent Create match callback
+created a real development lobby showing the invitation and waiting controls.
+
+The corrected release is ready in `Build/Itch-EditableOnlineUi-20261013`, with a
+verified ZIP at `Build/Itch-EditableOnlineUi-20261013.zip` containing `index.html`
+at the archive root. The Butler push with version
+`editable-online-ui-20261013-86f38f4` was **rejected before upload** by itch.io:
+`channel web's latest build is still processing, try again later` (HTTP 400).
+At **17:21 UTC**, completed head remained `2116176` and pending build `2120142`
+remained `queued`. This corrected build has not been published yet.
+
+The official itch.io support recommendation for this kind of processing delay is
+direct website upload; that fallback requires an authenticated browser session.
