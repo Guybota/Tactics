@@ -245,7 +245,24 @@ at the archive root. The Butler push with version
 `editable-online-ui-20261013-86f38f4` was **rejected before upload** by itch.io:
 `channel web's latest build is still processing, try again later` (HTTP 400).
 At **17:21 UTC**, completed head remained `2116176` and pending build `2120142`
-remained `queued`. This corrected build has not been published yet.
+remained `queued`. The corrected build had not been published at that check.
 
 The official itch.io support recommendation for this kind of processing delay is
 direct website upload; that fallback requires an authenticated browser session.
+
+Publication completed through the existing authenticated **Brave** session. The ZIP
+was uploaded using the normal Windows file picker and the itch.io website; no browser
+extension file-access permission was changed. The new upload **19741996** was selected
+as **This file will be played in the browser** and the project was saved.
+
+The published game was opened from `https://guybota.itch.io/lords-of-conflict`: the
+Online entry is visible and opens the authored online setup panel. An unauthenticated
+request to `https://html-classic.itch.zone/html/19741996/release.json` verified the
+exact validated source revision and enabled journal autosync. Publication is now live.
+
+The original Butler `web` upload remains available as a download and its queued build
+was not cancelled. Automatic approval review rejected hiding that existing public
+download; the safer alternative kept it visible while selecting the new playable build.
+Future Butler releases must explicitly switch the browser-playable selection back to
+the Butler upload after a new build finishes processing; the current live web player
+uses the direct ZIP upload, not the queued Butler channel.
