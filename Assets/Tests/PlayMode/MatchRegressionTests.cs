@@ -220,6 +220,93 @@ public class MatchRegressionTests
         return soldier;
     }
     [UnityTest]
+    public IEnumerator MovementPreviewUsesPixelSpritesAboveUnitsAndClearsOnCancel()
+    {
+        SetUpCorridor();
+        Set(Map, "hover_tile", ((Component)TileAt(4, 2)).gameObject);
+        Call(Map, "Draw_path_line");
+        var visual = (Component)Get(Map, "movementPath");
+        Assert.That(visual, Is.Not.Null);
+        var parts = new List<SpriteRenderer>();
+        foreach (var renderer in visual.GetComponentsInChildren<SpriteRenderer>())
+            if (renderer.name.StartsWith("Path segment ")) parts.Add(renderer);
+        Assert.That(parts.Count, Is.EqualTo(3));
+        var unitSprite = ((Component)King(0)).GetComponentInChildren<SpriteRenderer>();
+        foreach (var part in parts)
+        {
+            Assert.That(part.sprite.texture.filterMode, Is.EqualTo(FilterMode.Point));
+            Assert.That(part.sortingLayerID, Is.EqualTo(unitSprite.sortingLayerID));
+            Assert.That(part.sortingOrder, Is.GreaterThan(unitSprite.sortingOrder));
+        }
+        Assert.That(((LineRenderer)Get(Map, "line")).enabled, Is.False);
+        Assert.That(((LineRenderer)Get(Map, "arrow")).enabled, Is.False);
+        Assert.That(((IList)Get(Map, "path")).Count, Is.Zero);
+        Call(Map, "ResetInteraction");
+        foreach (var part in parts) Assert.That(part.gameObject.activeSelf, Is.False);
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator MouseHoverPreviewsPathEvenWhenTouchUiIsEnabled()
+    {
+        Assume.That(Input.mousePresent, Is.True);
+        SetUpCorridor();
+        var mobileMode = Script("MobileUiMode");
+        var camera = Camera.main;
+        Vector3 originalPosition = camera.transform.position;
+        try
+        {
+            mobileMode.GetMethod("SetOverride").Invoke(null, new object[] { true, 2f });
+            var target = ((Component)TileAt(3, 2)).transform.position;
+            var pointerWorld = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
+                target.z - camera.transform.position.z));
+            camera.transform.position += target - pointerWorld;
+            Set(Map, "hover_tile", null);
+            Set(controller, "hover_toggle", true);
+            Set(Map, "cooldown", 0f);
+            controller.GetType().GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(controller, null);
+            var preview = (IList)Get(Map, "points");
+            Assert.That(preview.Count, Is.EqualTo(2));
+            Assert.That(preview[1], Is.SameAs(((Component)TileAt(3, 2)).transform));
+            Assert.That(((IList)Get(Map, "path")).Count, Is.Zero);
+        }
+        finally
+        {
+            camera.transform.position = originalPosition;
+            mobileMode.GetMethod("SetOverride").Invoke(null, new object[] { null, 0f });
+        }
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator MovementPreviewHandlesBothTurnsAndReusesItsSegments()
+    {
+        var visual = (Component)Get(Map, "movementPath");
+        var route = new List<Transform>();
+        foreach (var position in new[] { new Vector2Int(2, 2), new Vector2Int(3, 2),
+            new Vector2Int(3, 3), new Vector2Int(4, 3), new Vector2Int(4, 2) })
+            route.Add(((Component)TileAt(position.x, position.y)).transform);
+        Call(visual, "Show", route);
+        var leftTurn = visual.transform.Find("Path segment 1").GetComponent<SpriteRenderer>();
+        var rightTurn = visual.transform.Find("Path segment 2").GetComponent<SpriteRenderer>();
+        var end = visual.transform.Find("Path segment 4").GetComponent<SpriteRenderer>();
+        Assert.That(leftTurn.sprite, Is.SameAs(Get(visual, "corner")));
+        Assert.That(leftTurn.flipY, Is.False);
+        Assert.That(rightTurn.flipY, Is.True);
+        Assert.That(Quaternion.Angle(rightTurn.transform.rotation, Quaternion.Euler(0, 0, 90)), Is.LessThan(.01f));
+        Assert.That(end.sprite, Is.SameAs(Get(visual, "tip")));
+        Assert.That(Quaternion.Angle(end.transform.rotation, Quaternion.Euler(0, 0, -90)), Is.LessThan(.01f));
+        int allocated = visual.transform.childCount;
+        route.RemoveRange(2, 3);
+        Call(visual, "Show", route);
+        Assert.That(visual.transform.childCount, Is.EqualTo(allocated));
+        Assert.That(visual.transform.Find("Path segment 1").GetComponent<SpriteRenderer>().sprite, Is.SameAs(Get(visual, "tip")));
+        Assert.That(end.gameObject.activeSelf, Is.False);
+        Call(visual, "Clear");
+        yield return null;
+    }
+
+    [UnityTest]
     public IEnumerator ClickUsesDestinationInsteadOfPreviousHoverPath()
     {
         SetUpCorridor();
@@ -342,6 +429,46 @@ public class MatchRegressionTests
         return tile;
     }
     [UnityTest]
+    public IEnumerator LeaderCanMoveBeforeBuildingAndCommitsMovementWithTheAction()
+    {
+        object buildTile = PrepareBuildTile();
+        Call(Map, "Select_tile", TileAt(4, 2), Teams[0]);
+        Call(King(0), "StopMovement");
+        Assert.That(((IList)Get(Map, "path")).Count, Is.GreaterThan(0));
+        Call(Map, "Start_build");
+        Assert.That(Get(buildTile, "can_build"), Is.EqualTo("can_build"));
+        Call(Map, "Finalize_build", buildTile);
+        Assert.That(Get(King(0), "current_tile"), Is.SameAs(TileAt(4, 2)));
+        Assert.That(Get(TileAt(2, 2), "unit"), Is.Null);
+        Assert.That(Get(buildTile, "has_castle"), Is.EqualTo(true));
+        Assert.That(Get(Teams[0], "money"), Is.EqualTo(6500));
+        Assert.That(Get(King(0), "has_moved"), Is.EqualTo(true));
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator PredictionUsesDestinationTerrainWithoutMovingTheUnit()
+    {
+        var attacker = King(0); var defender = King(1);
+        object destination = TileAt(5, 5);
+        object original = Get(attacker, "current_tile");
+        Set(destination, "has_castle", true);
+        Set(original, "has_castle", false); Set(original, "forest", null);
+        var state = UnityEngine.Random.state;
+        var preview = (Tactics.Core.CombatPrediction)Call(attacker, "PredictCombatFrom", defender, 1, destination);
+        Assert.That(Get(attacker, "current_tile"), Is.SameAs(original));
+        Assert.That(UnityEngine.Random.state, Is.EqualTo(state));
+        Set(original, "has_castle", true);
+        var committedTerrain = (Tactics.Core.CombatPrediction)Call(attacker, "PredictCombat", defender, 1);
+        Assert.That(preview.MinAttackerHealth, Is.EqualTo(committedTerrain.MinAttackerHealth));
+        Assert.That(preview.MaxAttackerHealth, Is.EqualTo(committedTerrain.MaxAttackerHealth));
+        Set(original, "has_castle", false);
+        var grass = (Tactics.Core.CombatPrediction)Call(attacker, "PredictCombat", defender, 1);
+        Assert.That(preview.MinAttackerHealth, Is.GreaterThan(grass.MinAttackerHealth));
+        yield return null;
+    }
+
+    [UnityTest]
     public IEnumerator BuildConsumesLeaderActionAndChargesOnce()
     {
         object tile = PrepareBuildTile();
@@ -367,6 +494,9 @@ public class MatchRegressionTests
         Assert.That(Get(tile, "has_castle"), Is.EqualTo(false));
         Assert.That(Get(Teams[0], "money"), Is.EqualTo(10000));
         Assert.That(Get(King(0), "has_moved"), Is.EqualTo(false));
+        // All four destinations are now unavailable: refreshing must still clear the old marker.
+        foreach (object candidate in (Array)Get(Map, "tiles"))
+            if ((int)Call(candidate, "Distance_to_tile", Get(King(0), "current_tile")) == 1) Call(candidate, "Activate_storm");
         Call(Map, "Start_build");
         Assert.That(Get(tile, "can_build"), Is.EqualTo("false"));
         yield return null;
@@ -394,6 +524,86 @@ public class MatchRegressionTests
         foreach (var tile in (Array)Get(Map, "tiles")) if ((bool)Get(tile, "has_storm")) count++;
         return count;
     }
+    [UnityTest]
+    public IEnumerator SharedCatalogLoadsNonHumanSavesWithoutMenuSnapshots()
+    {
+        SceneManager.LoadScene("Main Menu");
+        yield return null; yield return null;
+        var races = (IList)Script("MainMenu").GetField("classes").GetValue(null);
+        var orc = races[1]; var elf = races[2];
+        object orcAsset = orc.GetType().GetProperty("Definition").GetValue(orc);
+        object elfAsset = elf.GetType().GetProperty("Definition").GetValue(elf);
+        Script("MainMenu").GetMethod("SelectRace").Invoke(null, new[] { (object)0, orc });
+        Script("MainMenu").GetMethod("SelectRace").Invoke(null, new[] { (object)1, elf });
+        Call(UnityEngine.Object.FindFirstObjectByType(Script("MainMenu")), "PressStart");
+        yield return null; yield return null;
+        controller = (Component)UnityEngine.Object.FindFirstObjectByType(Script("scr_game_contoller"));
+        Assert.That(Get(Teams[0], "raceClass").GetType().GetProperty("Definition").GetValue(Get(Teams[0], "raceClass")), Is.SameAs(orcAsset));
+        var snapshot = JsonUtility.FromJson(JsonUtility.ToJson(Snapshot()), Script("GameSave"));
+        ((IList)Script("MainMenu").GetField("RaceDefinitions").GetValue(null)).Clear();
+        var names = (Array)Script("MainMenu").GetField("SelectedRaceNames").GetValue(null);
+        Array.Clear(names, 0, names.Length);
+        SceneManager.LoadScene("Main Scene");
+        yield return null; yield return null;
+        controller = (Component)UnityEngine.Object.FindFirstObjectByType(Script("scr_game_contoller"));
+        string error;
+        Assert.That(Load(snapshot, out error), Is.True, error);
+        Assert.That(Get(Get(Teams[0], "raceClass"), "className"), Is.EqualTo("Orc"));
+        Assert.That(Get(Get(Teams[1], "raceClass"), "className"), Is.EqualTo("Elfs"));
+        Assert.That(Get(Teams[1], "raceClass").GetType().GetProperty("Definition").GetValue(Get(Teams[1], "raceClass")), Is.SameAs(elfAsset));
+    }
+
+    [UnityTest]
+    public IEnumerator StormDamagesEveryoneOnlyAtRoundEndForTwoThreeAndFourPlayers()
+    {
+        for (int players = 2; players <= 4; players++)
+        {
+            SceneManager.LoadScene("Main Menu");
+            yield return null; yield return null;
+            Script("MainMenu").GetField("player3IsOn").SetValue(null, players >= 3);
+            Script("MainMenu").GetField("player4IsOn").SetValue(null, players >= 4);
+            Script("MainMenu").GetField("battle_royale_mode").SetValue(null, true);
+            Call(UnityEngine.Object.FindFirstObjectByType(Script("MainMenu")), "PressStart");
+            yield return null; yield return null;
+            controller = (Component)UnityEngine.Object.FindFirstObjectByType(Script("scr_game_contoller"));
+            for (int seat = 0; seat < players; seat++)
+            {
+                Set(King(seat), "hp", 10f);
+                Set(Get(King(seat), "current_tile"), "has_storm", true);
+                Set(Get(King(seat), "current_tile"), "has_castle", false);
+            }
+            for (int seat = 1; seat < players; seat++)
+            {
+                Call(controller, "Finalize_turn");
+                for (int team = 0; team < players; team++) Assert.That(Get(King(team), "hp"), Is.EqualTo(10f));
+            }
+            Call(controller, "Finalize_turn");
+            for (int team = 0; team < players; team++) Assert.That(Get(King(team), "hp"), Is.EqualTo(7.75f));
+            for (int seat = 1; seat < players; seat++) Call(controller, "Finalize_turn");
+            for (int team = 0; team < players; team++) Assert.That(Get(King(team), "hp"), Is.EqualTo(7.75f));
+        }
+    }
+
+    [UnityTest]
+    public IEnumerator StormEliminatingBothFinalLeadersAtRoundEndProducesDraw()
+    {
+        Script("MainMenu").GetField("battle_royale_mode").SetValue(null, true);
+        Set(King(0), "hp", 1f); Set(King(1), "hp", 1f);
+        Set(Get(King(0), "current_tile"), "has_storm", true);
+        Set(Get(King(1), "current_tile"), "has_storm", true);
+        Set(Get(King(0), "current_tile"), "has_castle", false);
+        Set(Get(King(1), "current_tile"), "has_castle", false);
+        Call(controller, "Finalize_turn");
+        Assert.That(Get(controller, "status"), Is.EqualTo("Select_tile"));
+        Call(controller, "Finalize_turn");
+        Assert.That(Get(Teams[0], "has_lost"), Is.EqualTo(true));
+        Assert.That(Get(Teams[1], "has_lost"), Is.EqualTo(true));
+        Assert.That(Get(controller, "status"), Is.EqualTo("Over"));
+        var label = (Component)Get(Get(controller, "uiManager"), "win_text");
+        Assert.That(label.GetType().GetProperty("text").GetValue(label), Is.EqualTo("Draw"));
+        yield return null;
+    }
+
     [UnityTest]
     public IEnumerator StormClosesOncePerRoundForTwoThreeAndFourPlayers()
     {
@@ -484,7 +694,7 @@ public class MatchRegressionTests
         Assert.That(content.childCount, Is.GreaterThan(0));
         Assert.That(Mathf.Abs(content.anchoredPosition.y), Is.LessThan(1000f), "Reset must use ScrollRect rather than hiding content at -100000.");
         Assert.That(scroll.verticalNormalizedPosition, Is.EqualTo(1f).Within(.01f));
-        var first = content.GetChild(0).GetComponent<UnityEngine.UI.Button>();
+        var first = content.GetComponentInChildren<UnityEngine.UI.Button>();
         Assert.That(first, Is.Not.Null);
         first.onClick.Invoke();
         yield return null;

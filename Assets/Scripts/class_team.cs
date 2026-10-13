@@ -9,7 +9,19 @@ public class Team : MonoBehaviour
     public List<Unit> units = new List<Unit>();
     public int money;
     public bool has_lost;
+    public bool isBot;
     public RaceClass raceClass;
+    private int nextUnitId = 1;
+    public int NextUnitId
+    {
+        get
+        {
+            int maximum = 0;
+            foreach (var unit in units) if (unit != null) maximum = System.Math.Max(maximum, unit.id);
+            return System.Math.Max(nextUnitId, checked(maximum + 1));
+        }
+    }
+    public void RestoreNextUnitId(int value) { nextUnitId = System.Math.Max(value, NextUnitId); }
 
 
 
@@ -20,10 +32,9 @@ public class Team : MonoBehaviour
         if (unit == null || units.Contains(unit)) return;
         if (unit.id <= 0 || units.Exists(existing => existing != null && existing.id == unit.id))
         {
-            int maximum = 0;
-            foreach (Unit existing in units) if (existing != null) maximum = System.Math.Max(maximum, existing.id);
-            unit.id = maximum + 1;
+            unit.id = NextUnitId;
         }
+        nextUnitId = System.Math.Max(nextUnitId, checked(unit.id + 1));
         unit.Set_team(this);
         units.Add(unit);
     }

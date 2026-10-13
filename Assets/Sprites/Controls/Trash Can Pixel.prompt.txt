@@ -1,0 +1,14 @@
+Generated with the built-in image generation tool.
+
+Prompt: Create one single clean pixel art trash can icon for a medieval fantasy
+tactics game's delete button. Production UI icon, front view, centered, complete
+silhouette, no other objects or text. True transparent background. Compact
+dustbin with a removable lid and small top handle, three vertical recessed slats,
+two tiny feet. Crisp 32x32 pixel design enlarged with nearest-neighbor blocks.
+Palette: dark chocolate #3e281e, brown #77503a, ochre #c88746, parchment #f1d1a0,
+ivory #fff0cc. Pale cream interior to read against parchment buttons, strong
+dark outline. Square overall, fills 70% of the canvas with transparent padding.
+Flat colors, square pixels, no gradients, glow, blurry shadows, metallic realism,
+antialiasing, background or drop shadow.
+
+Revision: simplify to lid, plain handle and rectangular body. Flat straight base, no feet or legs, no projections. Remove elaborate interior slats and bevels. Three flat colors, crisp blocks, readable at 24 pixels, transparent ground.

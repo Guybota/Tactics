@@ -25,6 +25,7 @@ public class Map : MonoBehaviour
     public bool is_building = false;
     public LineRenderer line;
     public LineRenderer arrow;
+    public MovementPathRenderer movementPath;
     public scr_game_contoller g_controller;
     public scr_camera game_camera;
     private Team current_team;
@@ -56,6 +57,9 @@ public class Map : MonoBehaviour
         tiles = new Tile[max_x, max_y];
         line = g_controller.line;
         arrow = g_controller.arrow.GetComponent<LineRenderer>();
+        if (movementPath == null) movementPath = line.GetComponent<MovementPathRenderer>();
+        line.enabled = false;
+        arrow.enabled = false;
         game_camera = g_controller.game_camera.GetComponent<scr_camera>();
         game_camera.SetMax(max_x * 64, max_y * 64);
         game_camera.maxZoom = (Math.Max(max_y, max_x) / 10) * 500;
@@ -110,8 +114,14 @@ public class Map : MonoBehaviour
     }
 
     public void GenerateMap(GameObject grassTile, GameObject forestTile, GameObject mountainTile)
+        => GenerateMap(grassTile, forestTile, mountainTile, new System.Random());
+
+    public void GenerateMap(GameObject grassTile, GameObject forestTile, GameObject mountainTile, int seed)
+        => GenerateMap(grassTile, forestTile, mountainTile, new System.Random(seed));
+
+    private void GenerateMap(GameObject grassTile, GameObject forestTile, GameObject mountainTile, System.Random random)
     {
-        System.Random rnd = new System.Random();
+        var layout = GeneratedMapLayout.Create(max_x, max_y, MainMenu.build_mode, random);
 
         for (int i = 0; i < max_x; i++)
         {
@@ -120,12 +130,11 @@ public class Map : MonoBehaviour
                 GameObject tilePrefab = grassTile;
 
                 // Randomly assign tile types
-                int randomNumber = rnd.Next(0, 100);
-                if (randomNumber < 15)
+                if (layout[i, j].Terrain == TerrainKind.Mountain)
                 {
                     tilePrefab = mountainTile;
                 }
-                else if (randomNumber < 20)
+                else if (layout[i, j].Terrain == TerrainKind.Forest)
                 {
                     tilePrefab = forestTile;
                 }
@@ -137,14 +146,7 @@ public class Map : MonoBehaviour
                 tile.position_y = j;
                 tile.unit = null;
 
-                if (randomNumber >= 20 && !MainMenu.build_mode)
-                {
-                    randomNumber = rnd.Next(0, 100);
-                    if (randomNumber < 5)
-                    {
-                        tile.Activate_castle();
-                    }
-                }
+                if (layout[i, j].HasCastle) tile.Activate_castle();
 
                 // Store tile reference in the map
                 tiles[i, j] = tile;
@@ -186,7 +188,7 @@ public class Map : MonoBehaviour
             if (Get_selected_tile().has_castle &&(Get_selected_tile().castle.GetComponent<Castle>().current_team == null || Get_selected_tile().castle.GetComponent<Castle>().current_team.team_name != current_team.team_name))
                 can_capture = true;
         }
-        uiManager.action_menu.GetComponent<scr_action_menu>().Setup(can_attack, can_capture, Get_selected_unit().is_king && Get_selected_tile().Is_equals_to(tile) && MainMenu.build_mode);
+        uiManager.action_menu.GetComponent<scr_action_menu>().Setup(can_attack, can_capture, Get_selected_unit().is_king && MainMenu.build_mode);
 
         uiManager.player_info.SetActive(false);
         uiManager.turn_info.SetActive(false);
@@ -207,11 +209,11 @@ public class Map : MonoBehaviour
         uiManager.attack_menu.SetActive(true);
         if (path.Count > 0 && (path[^1].position_x != Get_selected_tile().position_x || path[^1].position_y != Get_selected_tile().position_y))
         {
-            uiManager.attack_menu.GetComponent<scr_attack_menu>().Setup(unit1, unit2, path[^1].GetComponent<Tile>().Distance_to_tile(unit1.target_attack_tile));
+            uiManager.attack_menu.GetComponent<scr_attack_menu>().SetupFromTile(unit1, unit2, path[^1].Distance_to_tile(unit1.target_attack_tile), path[^1]);
         }
         else
         {
-            uiManager.attack_menu.GetComponent<scr_attack_menu>().Setup(unit1, unit2, Get_selected_tile().Distance_to_tile(unit1.target_attack_tile));
+            uiManager.attack_menu.GetComponent<scr_attack_menu>().SetupFromTile(unit1, unit2, Get_selected_tile().Distance_to_tile(unit1.target_attack_tile), Get_selected_tile());
         }
         
         uiManager.player_info.SetActive(false);
@@ -224,9 +226,8 @@ public class Map : MonoBehaviour
     {
         Unit unit = Get_selected_unit();
         if (unit.IsMoving) return;
-        if (path.Count > 0) unit.Change_current_tile(path[^1]);
-        unit.Finalize_turn();
-        ResetInteraction();
+        Tile destination = path.Count > 0 ? path[^1] : unit.current_tile;
+        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.Wait, g_controller.GetUnitKey(unit), PositionOf(destination)), out _);
     }
 
     public void ResetInteraction()
@@ -281,15 +282,8 @@ public class Map : MonoBehaviour
         if (attacker.IsMoving || attacker.has_died || attacker.target_attack_tile == null || attacker.target_attack_tile.unit == null) return;
         Unit defender = attacker.target_attack_tile.unit.GetComponent<Unit>();
         Tile destination = path.Count > 0 ? path[^1] : Get_selected_tile();
-        int distance = destination.Distance_to_tile(attacker.target_attack_tile);
-        if (distance < 1 || distance > attacker.attack_range || current_team.Is_in_team(defender)) return;
-        attacker.Change_current_tile(destination);
-        audioManager.PlaySFX(audioManager.attack);
-        attacker.Attack_unit(defender, distance);
-        attacker.target_attack_tile = null;
-        if (!attacker.has_died) attacker.Finalize_turn();
-        ResetInteraction();
-        Check_win();
+        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.Attack, g_controller.GetUnitKey(attacker),
+            PositionOf(destination), g_controller.GetUnitKey(defender)), out _);
     }
 
     public void Handle_capture()
@@ -297,30 +291,17 @@ public class Map : MonoBehaviour
         Unit unit = Get_selected_unit();
         if (unit.IsMoving || unit.has_died) return;
         Tile destination = path.Count > 0 ? path[^1] : Get_selected_tile();
-        if (!destination.has_castle) return;
-        audioManager.PlaySFX(audioManager.capture);
-        destination.castle.GetComponent<Castle>().Capture_castle(unit.team);
-        unit.Change_current_tile(destination);
-        unit.target_attack_tile = null;
-        unit.Finalize_turn();
-        ResetInteraction();
+        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.Capture, g_controller.GetUnitKey(unit), PositionOf(destination)), out _);
     }
 
     public bool Handle_spawn(string option)
     {
         if (selected_tile == null || current_team == null || current_team.has_lost) return false;
         Tile tile = Get_selected_tile();
-        if (tile.unit != null || !tile.has_castle || tile.castle.GetComponent<Castle>().current_team != current_team) return false;
         GameObject prefab = current_team.raceClass.AvailableUnits.Find(p => p.GetComponent<Unit>().unit_name == option);
-        if (prefab == null || prefab.GetComponent<Unit>().is_king || current_team.money < prefab.GetComponent<Unit>().unit_cost) return false;
-        Unit unit = Instantiate(prefab, tile.transform.position, Quaternion.identity, unitsRoot).GetComponent<Unit>();
-        unit.Change_current_tile(tile);
-        current_team.Add(unit);
-        unit.Finalize_turn();
-        current_team.money -= unit.unit_cost;
-        ResetInteraction();
-        g_controller.Update_player_info();
-        return true;
+        if (prefab == null) return false;
+        return g_controller.TryExecuteAction(MatchAction.Recruit(teams.IndexOf(current_team), PositionOf(tile),
+            UnityMatchAdapter.TypeId(prefab.GetComponent<Unit>())), out _);
     }
 
     public void Cancel_castle()
@@ -349,9 +330,12 @@ public class Map : MonoBehaviour
         cooldown = .2f;
         uiManager.action_menu.SetActive(false);
         Clear_board();
+        var unit = Get_selected_unit();
+        var destination = path.Count > 0 ? path[^1] : unit.current_tile;
+        var buildTargets = g_controller.GetBuildTargets(unit, destination);
         foreach (Tile tile in tiles)
         {
-            bool allowed = CanBuildOn(tile);
+            bool allowed = buildTargets.Contains(PositionOf(tile));
             tile.can_build = allowed ? "can_build" : "false";
             tile.Update_overlay(allowed ? "selected" : "attack");
         }
@@ -364,34 +348,25 @@ public class Map : MonoBehaviour
         if (!MainMenu.build_mode || selected_tile == null || Get_selected_tile().unit == null || current_team == null || current_team.has_lost) return false;
         Unit unit = Get_selected_unit();
         Tile destination = path.Count > 0 ? path[^1] : Get_selected_tile();
-        // Preserve the current stationary-build rule until movement + build is confirmed.
-        return unit.team == current_team && unit.is_king && !unit.has_died && !unit.has_moved && !unit.IsMoving &&
-            current_team.money >= 3500 && destination == unit.current_tile;
+        return !unit.IsMoving && g_controller.CanStartBuild(unit, destination);
     }
 
     private bool CanBuildOn(Tile tile)
     {
-        if (tile == null || !CanStartBuild() || tile.has_castle || tile.has_storm || tile.unit != null ||
-            tile.mountain != null || tile.forest != null || tile.castle == null || tile.position_x == 0 || tile.position_y == 0 ||
-            tile.position_x == max_x - 1 || tile.position_y == max_y - 1 || Get_selected_unit().current_tile.Distance_to_tile(tile) != 1) return false;
-        foreach (Tile other in tiles)
-        {
-            bool excluded = other.has_castle || (other.unit != null && other.unit.GetComponent<Unit>().team != current_team);
-            if (excluded && Math.Abs(other.position_x - tile.position_x) <= 2 && Math.Abs(other.position_y - tile.position_y) <= 2) return false;
-        }
-        return true;
+        if (tile == null || selected_tile == null || Get_selected_tile().unit == null || Get_selected_unit().IsMoving) return false;
+        var unit = Get_selected_unit();
+        var destination = path.Count > 0 ? path[^1] : unit.current_tile;
+        return g_controller.IsActionLegal(new MatchAction(MatchActionKind.BuildCastle, g_controller.GetUnitKey(unit),
+            PositionOf(destination), target: PositionOf(tile)));
     }
 
     public void Finalize_build(Tile tile)
     {
         if (!is_building || !CanBuildOn(tile)) return;
         Unit unit = Get_selected_unit();
-        tile.Activate_castle();
-        tile.castle.GetComponent<Castle>().Capture_castle(unit.team);
-        current_team.money -= 3500;
-        audioManager.PlaySFX(audioManager.capture);
-        g_controller.Update_player_info();
-        Finalize_move();
+        var destination = path.Count > 0 ? path[^1] : unit.current_tile;
+        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.BuildCastle, g_controller.GetUnitKey(unit),
+            PositionOf(destination), target: PositionOf(tile)), out _);
     }
 
     public void ChangeTile(Tile tile, string option)
@@ -421,6 +396,7 @@ public class Map : MonoBehaviour
 
         if (hover_tile != null) hover_tile.GetComponent<Tile>().Update_hover_overlay("off");
         hover_tile = null;
+        tile.gameObject.SetActive(false);
         Destroy(tile.gameObject);
         selectedTile = Instantiate(selectedTile, new Vector3(position_x * 64, position_y * 64), Quaternion.identity, transform);
         selectedTile.GetComponent<Tile>().position_x = position_x;
@@ -635,82 +611,31 @@ public class Map : MonoBehaviour
                 break;
         }
     }
+    public void HoverAt(Vector2 point)
+    {
+        if (!WorldPointer.TryGetTile(point, out var tile)) return;
+        if (hover_tile != null) hover_tile.GetComponent<Tile>().Update_hover_overlay("off");
+        hover_tile = tile.gameObject; tile.Update_hover_overlay("on");
+        if (uiManager != null) uiManager.Update_tile_info(tile);
+    }
 
     public void Draw_path_line()
     {
         Clear_line();
-        if (hover_tile == null || selected_tile == null || !is_unit_selected || selectedMovement == null ||
+        if (movementPath == null || hover_tile == null || selected_tile == null || !is_unit_selected || selectedMovement == null ||
             !current_team.Is_in_team(Get_selected_unit()) || Get_selected_unit().has_moved) return;
         if (!TryPlanPath(hover_tile.GetComponent<Tile>(), selectedMovement, out List<Tile> preview)) return;
-        line.startWidth = 16;
-        line.endWidth = 16;
-        line.positionCount = preview.Count;
         for (int i = 0; i < preview.Count; i++)
         {
             points.Add(preview[i].transform);
-            line.SetPosition(i, preview[i].transform.position);
         }
-        if (preview.Count > 1) Draw_arrow_point(preview.Count);
-    }
-
-    void Draw_arrow_point(int i)
-    {
-        arrow.positionCount = 2;
-        arrow.startWidth = 32;
-        arrow.endWidth = 1;
-        float x_distance = points[i - 1].position.x - points[i - 2].position.x;
-        float y_distance = points[i - 1].position.y - points[i - 2].position.y;
-        if (x_distance != 0)
-        {
-            if (x_distance > 0)
-            {
-                float x_position1 = points[i - 1].position.x - 16;
-                float x_position2 = points[i - 1].position.x + 13;
-                Vector3 arrow_start = new Vector3(x_position1, points[i - 1].position.y);
-                Vector3 arrow_point = new Vector3(x_position2, points[i - 1].position.y);
-                arrow.SetPosition(0, arrow_start);
-                arrow.SetPosition(1, arrow_point);
-            }
-            else
-            {
-                float x_position1 = points[i - 1].position.x + 16;
-                float x_position2 = points[i - 1].position.x - 13;
-                Vector3 arrow_start = new Vector3(x_position1, points[i - 1].position.y);
-                Vector3 arrow_point = new Vector3(x_position2, points[i - 1].position.y);
-                arrow.SetPosition(0, arrow_start);
-                arrow.SetPosition(1, arrow_point);
-            }
-        }
-        else if (y_distance != 0)
-        {
-            if (y_distance > 0)
-            {
-                float y_position1 = points[i - 1].position.y - 16;
-                float y_position2 = points[i - 1].position.y + 13;
-                Vector3 arrow_start = new Vector3(points[i - 1].position.x, y_position1);
-                Vector3 arrow_point = new Vector3(points[i - 1].position.x, y_position2);
-                arrow.SetPosition(0, arrow_start);
-                arrow.SetPosition(1, arrow_point);
-            }
-            else
-            {
-                float y_position1 = points[i - 1].position.y + 16;
-                float y_position2 = points[i - 1].position.y - 13;
-                Vector3 arrow_start = new Vector3(points[i - 1].position.x, y_position1);
-                Vector3 arrow_point = new Vector3(points[i - 1].position.x, y_position2);
-                arrow.SetPosition(0, arrow_start);
-                arrow.SetPosition(1, arrow_point);
-            }
-        }
+        movementPath.Show(points);
     }
 
     public void Check_win()
     {
-        g_controller.ResolveDefeats();
-        int remaining = 0;
-        Team winner = null;
-        foreach (Team team in teams) if (!team.has_lost) { remaining++; winner = team; }
-        if (remaining > 1) return;
+        var outcome = g_controller.ResolveOutcome();
+        if (!outcome.IsOver) return;
         g_controller.status = "Over";
         g_controller.menu_lock = true;
         g_controller.hover_toggle = false;
@@ -721,7 +646,7 @@ public class Map : MonoBehaviour
         uiManager.turn_info.SetActive(false);
         uiManager.main_menu.SetActive(false);
         uiManager.buttons.SetActive(false);
-        uiManager.win_text.text = remaining == 0 ? "Draw" : winner.team_name + "\nWins!!!";
+        uiManager.win_text.text = outcome.Winner < 0 ? "Draw" : teams[outcome.Winner].team_name + "\nWins!!!";
         uiManager.win_menu.SetActive(true);
         game_camera.Clear_follow();
         game_camera.Lock_camera();
@@ -810,13 +735,14 @@ public class Map : MonoBehaviour
 
     public void Clear_line()
     {
-        if (line.positionCount > 0)
+        if (movementPath != null) movementPath.Clear();
+        if (line != null && line.positionCount > 0)
         {
             line.positionCount = 0;
         }
 
         points.Clear();
-        arrow.positionCount = 0;
+        if (arrow != null) arrow.positionCount = 0;
     }
 
     Tile Get_selected_tile()

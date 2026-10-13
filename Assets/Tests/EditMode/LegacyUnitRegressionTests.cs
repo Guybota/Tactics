@@ -83,9 +83,17 @@ public class LegacyUnitRegressionTests
         var attacker = Unit(1); var defender = Unit(2);
         Set(attacker, "hp", 6.5f); Set(attacker, "max_health", 13f); Set(attacker, "attack", 4);
         Set(defender, "hp", 8f); Set(defender, "max_health", 8f); Set(defender, "attack", 4);
-        var expected = Tactics.Core.CombatRules.Resolve(new Tactics.Core.Combatant(6.5f, 13, 4, 1), new Tactics.Core.Combatant(8, 8, 4, 1), 1);
-        Call(attacker, "Attack_unit", defender, 1);
-        Assert.That(Get<float>(attacker, "hp"), Is.EqualTo(expected.AttackerHealth).Within(0.0001f));
-        Assert.That(Get<float>(defender, "hp"), Is.EqualTo(expected.DefenderHealth).Within(0.0001f));
+        var state = UnityEngine.Random.state;
+        try
+        {
+            UnityEngine.Random.InitState(1729);
+            int attackLuck = UnityEngine.Random.Range(0, 10), counterLuck = UnityEngine.Random.Range(0, 10);
+            var expected = (Tactics.Core.CombatResult)Call(attacker, "ResolveCombat", defender, 1, attackLuck, counterLuck);
+            UnityEngine.Random.InitState(1729);
+            Call(attacker, "Attack_unit", defender, 1);
+            Assert.That(Get<float>(attacker, "hp"), Is.EqualTo(expected.AttackerHealth).Within(0.0001f));
+            Assert.That(Get<float>(defender, "hp"), Is.EqualTo(expected.DefenderHealth).Within(0.0001f));
+        }
+        finally { UnityEngine.Random.state = state; }
     }
 }

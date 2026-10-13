@@ -26,23 +26,27 @@ public class scr_attack_menu : MonoBehaviour
     [SerializeField] private Preview_health_bar defenderHealthPreview;
 
     public void Setup(Unit unit1, Unit unit2, int attack_distance)
+        => SetupFromTile(unit1, unit2, attack_distance, unit1.current_tile);
+
+    public void SetupFromTile(Unit unit1, Unit unit2, int attack_distance, Tile destination)
     {
         EnsurePreviews();
         attackerPreview.Set(unit1);
         defenderPreview.Set(unit2);
 
-        float unit1_strength = unit1.Calculate_strength();
-        float unit2_strength = unit2.Calculate_strength();
-
-        CombatResult result = CombatRules.Resolve(unit1.CombatStats, unit2.CombatStats, attack_distance);
-        float unit2_strength2 = CombatRules.Strength(result.DefenderHealth, unit2.max_health);
-
-        attackerHealthPreview.Update_predicted_health(unit1.hp, result.AttackerHealth, unit1.max_health);
-        defenderHealthPreview.Update_predicted_health(unit2.hp, result.DefenderHealth, unit2.max_health);
-
-        p1_stats_info.GetComponent<TextMeshProUGUI>().text = Math.Ceiling(unit1.hp).ToString() + " / " + unit1.max_health.ToString() + "\nAttack: " + unit1.attack.ToString() + "\nStrength: " + Math.Ceiling(unit1_strength * 100) + "%";
-        p2_stats_info.GetComponent<TextMeshProUGUI>().text = Math.Ceiling(unit2.hp).ToString() + " / " + unit2.max_health.ToString() + "\nAttack: " + unit2.attack.ToString() + "\nStrength: " + Math.Ceiling(unit2_strength * 100) + "(" + Math.Ceiling(unit2_strength2 * 100) + ")%";
+        CombatPrediction prediction = unit1.PredictCombatFrom(unit2, attack_distance, destination);
+        // Bars show the lowest remaining health; text exposes the complete interval.
+        attackerHealthPreview.Update_predicted_health(unit1.hp, prediction.MinAttackerHealth, unit1.max_health);
+        defenderHealthPreview.Update_predicted_health(unit2.hp, prediction.MinDefenderHealth, unit2.max_health);
+        p1_stats_info.GetComponent<TextMeshProUGUI>().text = unit1.hp.ToString("0.##") + " / " + unit1.max_health.ToString("0.##")
+            + "\nDamage: " + Interval(prediction.MinDamage, prediction.MaxDamage)
+            + "\nAfter: " + Interval(prediction.MinAttackerHealth, prediction.MaxAttackerHealth);
+        p2_stats_info.GetComponent<TextMeshProUGUI>().text = unit2.hp.ToString("0.##") + " / " + unit2.max_health.ToString("0.##")
+            + "\nCounter: " + Interval(prediction.MinCounterDamage, prediction.MaxCounterDamage)
+            + "\nAfter: " + Interval(prediction.MinDefenderHealth, prediction.MaxDefenderHealth);
     }
+    private static string Interval(float minimum, float maximum)
+        => minimum.ToString("0.##") + "–" + maximum.ToString("0.##");
 
     private void EnsurePreviews()
     {

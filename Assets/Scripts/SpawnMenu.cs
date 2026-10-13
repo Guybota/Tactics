@@ -26,6 +26,7 @@ public class SpawnMenu : MonoBehaviour
 
     internal void SetCastleButtons(List<GameObject> units, scr_game_contoller game_Contoller)
     {
+        if (unitButton.scene.IsValid()) unitButton.SetActive(false);
         if (buttons.Count > 0)
         {
             foreach (GameObject button in buttons)
@@ -43,6 +44,7 @@ public class SpawnMenu : MonoBehaviour
             {
                 GameObject button = Instantiate(unitButton, spawnPanel.transform);
                 button.GetComponent<UnitButton>().Set(this, unit.GetComponent<Unit>());
+                button.SetActive(true);
                 buttons.Add(button);
             }
         }

@@ -33,17 +33,127 @@ public class scr_game_contoller : MonoBehaviour
     public int map_height = 10;
 
     public bool menu_lock = false;
-    private bool menu_toggle;
     public bool hover_toggle = true;
     private bool loading = false;
 
     AudioManager audioManager;
 
     [SerializeField] private RaceClass defaultRace;
+    [SerializeField] private RaceCatalog contentCatalog;
     private readonly Dictionary<string, RaceClass> raceCatalog = new Dictionary<string, RaceClass>();
     private GameObject loadedMatchRoot;
-    private int lastStormRound = -1;
     public int CurrentRound => TurnRules.Round(Mathf.Max(0, turn), teams.Count);
+    private UnityMatchAdapter matchAdapter;
+    private LocalMatchSession localMatchSession;
+    private uint randomState = 0x6D2B79F5;
+    public uint RandomState => randomState;
+    public int MatchRevision { get; private set; }
+    public bool IsBotTurn => turn >= 0 && teams.Count > 0 && teams[turn % teams.Count].isBot;
+    public bool CanAdvanceBot => !loading && status == "Select_tile" && IsBotTurn
+        && !LandscapeOrientation.InputBlocked && Time.timeScale > 0;
+    public bool CanPlanBot => CanAdvanceBot && !teams.SelectMany(t => t.units).Any(u => u != null && u.IsMoving);
+    private BotRunner botRunner;
+    private CombatPresentation combatPresentation;
+    public bool IsCombatAnimating => combatPresentation != null && combatPresentation.IsPlaying;
+    public bool IsCombatMoving => combatPresentation != null && combatPresentation.IsMoving;
+    public BotPlanner CreateBotPlanner() => new BotPlanner(MatchAdapter.Engine);
+    public List<GridPosition> GetMovementPath(UnitKey key, GridPosition destination)
+        => MatchAdapter.Engine.Movement(GetStateSnapshot(), key).PathTo(destination);
+    // Temporary bridge for local saves and legacy component edits. Remote sessions must
+    // use confirmed snapshots and must never import state captured from the scene.
+    private LocalMatchSession LocalSession
+    {
+        get
+        {
+            var legacyState = MatchAdapter.Capture();
+            if (localMatchSession == null)
+                localMatchSession = new LocalMatchSession(MatchAdapter.Engine, legacyState, MatchRevision);
+            else localMatchSession.Restore(legacyState, MatchRevision);
+            return localMatchSession;
+        }
+    }
+    public MatchState GetStateSnapshot() => LocalSession.Snapshot();
+    private UnityMatchAdapter MatchAdapter => matchAdapter ?? (matchAdapter = new UnityMatchAdapter(this, raceCatalog.Values));
+    public UnitKey GetUnitKey(Unit unit) => MatchAdapter.Key(unit);
+    public bool IsActionLegal(MatchAction action) => MatchAdapter.Engine.Validate(GetStateSnapshot(), action).Success;
+    public bool CanStartBuild(Unit unit, Tile destination)
+        => MatchAdapter.Engine.ValidateBuildStart(GetStateSnapshot(), GetUnitKey(unit), new GridPosition(destination.position_x, destination.position_y)).Success;
+    public HashSet<GridPosition> GetBuildTargets(Unit unit, Tile destination)
+        => MatchAdapter.Engine.BuildTargets(GetStateSnapshot(), GetUnitKey(unit), new GridPosition(destination.position_x, destination.position_y));
+
+    public bool TryExecuteAction(MatchAction action, out string error)
+    {
+        error = null;
+        if (loading || status == "Over" || status == "Menu" || status == "Saving" || status == "Loading")
+        { error = "The match is not accepting actions."; return false; }
+        if (action == null) { error = "Action is required."; return false; }
+        if (IsCombatAnimating) { error = "Wait for the attack animation."; return false; }
+        if (botRunner != null && botRunner.IsAnimating)
+        { error = "Wait for the bot presentation."; return false; }
+        if (action.Kind != MatchActionKind.EndTurn && teams.SelectMany(t => t.units).Any(u => u != null && u.IsMoving))
+        { error = "Wait for the movement animation."; return false; }
+        Unit attackActor = null, attackTarget = null;
+        float actorHealth = 0, targetHealth = 0;
+        var attackPath = new List<Vector3>();
+        if (action.Kind == MatchActionKind.Attack && IsActionLegal(action))
+        {
+            attackActor = teams[action.Actor.Player].Get_unit(action.Actor.Id);
+            attackTarget = teams[action.TargetUnit.Player].Get_unit(action.TargetUnit.Id);
+            actorHealth = attackActor.hp; targetHealth = attackTarget.hp;
+            var destination = gameMap.GetTileAtPosition(action.Destination.X, action.Destination.Y).transform.position;
+            // Human movement previews have already reached the destination. Bots still need to walk there.
+            if (Vector3.Distance(attackActor.transform.position, destination) > .1f)
+                foreach (var point in GetMovementPath(action.Actor, action.Destination))
+                {
+                    var position = gameMap.GetTileAtPosition(point.X, point.Y).transform.position;
+                    if (Vector3.Distance(position, attackActor.transform.position) > .1f) attackPath.Add(position);
+                }
+        }
+        var result = LocalSession.Submit(action, MatchRevision);
+        if (!result.Success) { error = result.Error; return false; }
+        var next = result.State;
+        if (attackActor != null && attackTarget != null)
+        {
+            if (combatPresentation == null) combatPresentation = gameObject.AddComponent<CombatPresentation>();
+            combatPresentation.Prepare(this, attackActor, attackTarget);
+        }
+        MatchAdapter.Apply(next);
+        randomState = next.RandomState;
+        MatchRevision = result.Revision;
+        gameMap.ResetInteraction();
+        Update_player_info(); Set_castle_buttons();
+        uiManager.turn_number.text = "Turn\n" + CurrentRound;
+        if (action.Kind == MatchActionKind.EndTurn) CenterCameraOnActiveTeam();
+        gameMap.Check_win();
+        PlayActionSound(action.Kind);
+        if (attackActor != null && attackTarget != null)
+        {
+            var target = next.FindUnit(action.TargetUnit);
+            var actor = next.FindUnit(action.Actor);
+            int distance = Mathf.Abs(action.Destination.X - target.Position.X) + Mathf.Abs(action.Destination.Y - target.Position.Y);
+            combatPresentation.Play(attackPath, gameMap.GetTileAtPosition(action.Destination.X, action.Destination.Y).transform.position,
+                target.IsAlive && distance <= target.Range, !target.IsAlive, !actor.IsAlive,
+                target.Health < targetHealth, actor.Health < actorHealth);
+        }
+        return true;
+    }
+
+    private void PlayActionSound(MatchActionKind kind)
+    {
+        switch (kind)
+        {
+            case MatchActionKind.Attack:
+                audioManager.PlaySFX(audioManager.attack);
+                break;
+            case MatchActionKind.Capture:
+            case MatchActionKind.BuildCastle:
+                audioManager.PlaySFX(audioManager.capture);
+                break;
+            case MatchActionKind.Recruit:
+                audioManager.PlaySFX(audioManager.buy);
+                break;
+        }
+    }
 
     private void Awake()
     {
@@ -59,40 +169,100 @@ public class scr_game_contoller : MonoBehaviour
         Hide_load_menu();
         Hide_save_menu();
         uiManager.action_menu.SetActive(false);
+        game_camera.GetComponent<WorldTouchInput>().Tapped += OnTouchTap;
+        foreach (var button in uiManager.main_menu.GetComponentsInChildren<UnityEngine.UI.Button>(true))
+            for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
+                if (button.onClick.GetPersistentMethodName(i) == "Finalize_turn")
+                {
+                    button.onClick.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
+                    button.onClick.AddListener(EndTurnFromMenu);
+                }
+        gameObject.AddComponent<TouchMatchControls>().Initialize(this);
+        var pending = MainMenu.TakePendingSave();
+        if (pending != null)
+        {
+            if (!TryLoadSnapshot(pending, out string error))
+            {
+                Debug.LogWarning("Could not open the saved game: " + error);
+                SceneManager.LoadScene(0);
+                return;
+            }
+            botRunner = gameObject.AddComponent<BotRunner>(); botRunner.Initialize(this);
+            return;
+        }
+        var customMap = MainMenu.SelectedCustomMap;
+        if (customMap != null)
+        {
+            try { CustomMapValidator.ValidatePlayable(customMap); }
+            catch (Exception exception) { Debug.LogWarning("Cannot start custom map: " + exception.Message); SceneManager.LoadScene(0); return; }
+            map_width = customMap.width; map_height = customMap.height;
+        }
         gameMap.Set(map_width, map_height, this);
-        gameMap.GenerateMap(grass_tile, forest_tile, mountain_tile);
+        if (customMap == null) gameMap.GenerateMap(grass_tile, forest_tile, mountain_tile);
+        else CustomMapTiles.Apply(gameMap, customMap, grass_tile, forest_tile, mountain_tile);
 
-        SpawnLeader(teams[0], 0, 0, 2);
-        SpawnLeader(teams[1], 1, map_width - 1, map_height - 3);
-        if (MainMenu.player3IsOn)
+        var first = customMap?.StartFor(0); var second = customMap?.StartFor(1);
+        SpawnLeader(teams[0], 0, first?.x ?? 0, first?.y ?? 2);
+        SpawnLeader(teams[1], 1, second?.x ?? map_width - 1, second?.y ?? map_height - 3);
+        if (customMap != null ? customMap.playerCount >= 3 : MainMenu.player3IsOn)
         {
             teams.Add(team3);
-            SpawnLeader(team3, 2, 0, map_height - 3);
+            var start = customMap?.StartFor(2); SpawnLeader(team3, 2, start?.x ?? 0, start?.y ?? map_height - 3);
         }
-        if (MainMenu.player4IsOn)
+        if (customMap != null ? customMap.playerCount >= 4 : MainMenu.player4IsOn)
         {
             teams.Add(team4);
-            SpawnLeader(team4, 3, map_width - 1, 2);
+            var start = customMap?.StartFor(3); SpawnLeader(team4, 3, start?.x ?? map_width - 1, start?.y ?? 2);
         }
+        if (customMap != null)
+            for (int y = 0; y < customMap.height; y++) for (int x = 0; x < customMap.width; x++)
+            {
+                var cell = customMap.Cell(x, y);
+                if (cell.castle) gameMap.tiles[x, y].castle.GetComponent<Castle>().Capture_castle(cell.castleOwner < 0 ? null : teams[cell.castleOwner]);
+            }
         foreach (Team team in teams) if (MainMenu.build_mode) team.money = 4000;
         uiManager.Update_tile_info(null);
         gameMap.Populate_adjacency_list();
         turn = 0;
+        randomState = (uint)UnityEngine.Random.Range(1, int.MaxValue);
         Initialize_turn();
+        botRunner = gameObject.AddComponent<BotRunner>();
+        botRunner.Initialize(this);
     }
 
     private void BuildRaceCatalog()
     {
-        if (MainMenu.RaceDefinitions.Count > 0)
+        if (contentCatalog != null)
+        {
+            contentCatalog.Validate();
+            foreach (var definition in contentCatalog.Races)
+            {
+                RaceClass race;
+                if (defaultRace != null && defaultRace.Definition == definition) race = defaultRace;
+                else
+                {
+                    var holder = new GameObject(definition.DisplayName + " Definition");
+                    holder.transform.SetParent(transform, false);
+                    race = holder.AddComponent<RaceClass>();
+                }
+                race.Bind(definition);
+                raceCatalog.Add(race.className, race);
+            }
+        }
+        else if (MainMenu.RaceDefinitions.Count > 0)
         {
             foreach (var definition in MainMenu.RaceDefinitions)
             {
                 var holder = new GameObject(definition.Name + " Definition");
                 holder.transform.SetParent(transform);
                 var race = holder.AddComponent<RaceClass>();
-                race.className = definition.Name;
-                race.Leader = definition.Leader;
-                race.AvailableUnits = new List<GameObject>(definition.Units);
+                if (definition.Asset != null) race.Bind(definition.Asset);
+                else
+                {
+                    race.className = definition.Name;
+                    race.Leader = definition.Leader;
+                    race.AvailableUnits = new List<GameObject>(definition.Units);
+                }
                 raceCatalog.Add(race.className, race);
             }
         }
@@ -111,6 +281,7 @@ public class scr_game_contoller : MonoBehaviour
         string name = MainMenu.SelectedRaceNames[playerSlot];
         if (name == null || !raceCatalog.TryGetValue(name, out race)) race = defaultRace != null ? defaultRace : raceCatalog.Values.First();
         team.raceClass = race;
+        team.isBot = MainMenu.BotPlayers[playerSlot];
         team.has_lost = false;
         Tile tile = gameMap.GetTileAtPosition(x, y);
         if (tile.mountain != null)
@@ -132,27 +303,17 @@ public class scr_game_contoller : MonoBehaviour
     void Update()
     {
         if (status == "Over" || loading) return;
-        if (Input.GetButtonUp("Cancel") && !menu_lock)
+        if (Input.GetButtonUp("Cancel"))
         {
-            switch(menu_toggle)
-            {
-                case true:
-                    uiManager.player_info.SetActive(true);
-                    Hide_Menu();
-                    break;
-                case false:
-                    uiManager.player_info.SetActive(true);
-                    Menu_button();
-                    break;
-            }
+            HandleBack();
         }
 
         if (gameMap.cooldown <= 0)
         {
-            if (status == "Select_tile")
+            if (status == "Select_tile" && !IsBotTurn && !IsCombatAnimating)
             {
-                gameMap.Hover_mouse(hover_toggle);
-                Select_tile();
+                if (!WorldTouchInput.SuppressMouse)
+                { if (Input.mousePresent) gameMap.Hover_mouse(hover_toggle); Select_tile(); }
             }
         }
         else
@@ -163,7 +324,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public void ProcessMenuOption(string option)
     {
-        if (status == "Over" || loading) return;
+        if (status == "Over" || loading || IsBotTurn || IsCombatAnimating) return;
         // Handle the chosen menu option (e.g., "Wait" or "Attack")
         switch (option)
         {
@@ -202,7 +363,8 @@ public class scr_game_contoller : MonoBehaviour
 
     public void ProcessSpawnOption(string option)
     {
-        if (gameMap.Handle_spawn(option)) audioManager.PlaySFX(audioManager.buy);
+        if (IsBotTurn || IsCombatAnimating) return;
+        gameMap.Handle_spawn(option);
     }
     void Select_tile()
     {
@@ -219,38 +381,59 @@ public class scr_game_contoller : MonoBehaviour
 
     public bool SelectWorldAt(Vector2 screenPosition)
     {
-        if (loading || status != "Select_tile" || gameMap.cooldown > 0 || !WorldPointer.TryGetTile(screenPosition, out Tile tile)) return false;
+        if (loading || IsCombatAnimating || IsBotTurn || status != "Select_tile" || gameMap.cooldown > 0 || !WorldPointer.TryGetTile(screenPosition, out Tile tile)) return false;
+        gameMap.HoverAt(screenPosition);
         gameMap.Select_tile(tile, teams[turn % teams.Count]);
         return true;
+    }
+    private void OnTouchTap(Vector2 point) => SelectWorldAt(point);
+    public void HandleBack()
+    {
+        if (UiBackAction.TryCloseTop()) return;
+        if (loading || status == "Over") return;
+        if (status == "Saving") { Hide_save_menu(); status = "Menu"; return; }
+        if (status == "Loading") { Hide_load_menu(); status = "Menu"; return; }
+        if (status == "Menu") { Back_button(); return; }
+        if (IsBotTurn) { Menu_button(); return; }
+        if (status == "Castle") { gameMap.Cancel_castle(); return; }
+        if (gameMap.selected_tile != null)
+        {
+            if (gameMap.is_building || gameMap.selecting_attack || uiManager.action_menu.activeSelf || uiManager.attack_menu.activeSelf)
+                gameMap.Cancel_move();
+            else gameMap.ResetInteraction();
+            return;
+        }
+        Menu_button();
     }
 
     public void Finalize_turn()
     {
-        if (status == "Over") return;
+        if (status == "Over" || IsBotTurn || IsCombatAnimating || loading || status == "Menu" || status == "Saving" || status == "Loading") return;
         gameMap.Finalize_turn();
-        ResolveDefeats();
-        gameMap.Check_win();
-        if (status == "Over") return;
-        int next = TurnRules.NextActiveTurn(turn, teams.Select(t => t.has_lost).ToArray());
-        if (next < 0) return;
-        turn = next;
-        Initialize_turn();
+        TryExecuteAction(MatchAction.EndTurn(turn % teams.Count), out _);
+    }
+    public void EndTurnFromMenu()
+    {
+        if (status != "Menu" || IsBotTurn || loading) return;
+        Back_button(); Finalize_turn();
     }
 
     public void ResolveDefeats()
+        => ResolveOutcome();
+
+    public MatchState ResolveOutcome()
     {
-        foreach (Team team in teams)
-        {
-            if (!team.Check_loss()) continue;
-            foreach (Unit unit in team.units) if (unit != null && !unit.has_died) unit.Eliminate();
-            gameMap.ReleaseCastles(team);
-        }
+        var state = GetStateSnapshot();
+        MatchEngine.ResolveDefeats(state);
+        MatchAdapter.ApplyEliminations(state);
+        localMatchSession.Restore(state, MatchRevision);
+        return state;
     }
 
     public void Update_player_info()
     {
         uiManager.turn_image.GetComponent<UnityEngine.UI.Image>().color = teams[turn % teams.Count].team_color - new Color(0, 0, 0, 0.3f);
-        uiManager.turn_name.GetComponent<TextMeshProUGUI>().text = teams[turn % teams.Count].team_name;
+        uiManager.turn_name.GetComponent<TextMeshProUGUI>().text = teams[turn % teams.Count].team_name + (IsBotTurn ? " (Bot)" : "");
         uiManager.money_text.GetComponent<TextMeshProUGUI>().text = "Money: " + teams[turn % teams.Count].money.ToString() + "$";
     }
 
@@ -261,55 +444,21 @@ public class scr_game_contoller : MonoBehaviour
 
     public void Initialize_turn()
     {
-        // Storm damage may eliminate consecutive participants; advance without recursion.
-        for (int attempt = 0; attempt < teams.Count; attempt++)
+        var state = GetStateSnapshot();
+        MatchEngine.ResolveDefeats(state);
+        if (!state.IsOver)
         {
-            ResolveDefeats();
-            gameMap.Check_win();
-            if (status == "Over") return;
-            Team active = teams[turn % teams.Count];
-            if (active.has_lost)
-            {
-                turn = TurnRules.NextActiveTurn(turn, teams.Select(t => t.has_lost).ToArray());
-                continue;
-            }
-            gameMap.ResetInteraction();
-            Set_castle_buttons();
-            int round = CurrentRound;
-            uiManager.turn_number.text = "Turn\n" + round;
-            if (MainMenu.battle_royale_mode)
-            {
-                if (lastStormRound != round)
-                {
-                    gameMap.UpdateStormRadius();
-                    lastStormRound = round;
-                }
-                foreach (Unit unit in active.units)
-                    if (unit != null && !unit.has_died && unit.current_tile != null && unit.current_tile.has_storm)
-                        unit.Take_damage(2 + round * 0.25f);
-                ResolveDefeats();
-                gameMap.Check_win();
-                if (status == "Over") return;
-                if (active.has_lost)
-                {
-                    turn = TurnRules.NextActiveTurn(turn, teams.Select(t => t.has_lost).ToArray());
-                    continue;
-                }
-            }
-            active.money += 500;
-            foreach (Tile tile in gameMap.tiles)
-                if (tile.has_castle && tile.castle.GetComponent<Castle>().current_team == active) active.money += 500;
-            foreach (Unit unit in active.units)
-            {
-                if (unit == null || unit.has_died) continue;
-                unit.Initialize_turn();
-                if (unit.current_tile != null && unit.current_tile.has_castle && unit.current_tile.castle.GetComponent<Castle>().current_team == active)
-                    unit.Heal(unit.max_health * 0.3f);
-            }
-            Update_player_info();
-            CenterCameraOnActiveTeam();
-            return;
+            if (state.Players[state.ActivePlayer].HasLost)
+                state.Turn = TurnRules.NextActiveTurn(state.Turn, state.Players.Select(p => p.HasLost).ToArray());
+            MatchEngine.BeginTurn(state);
         }
+        MatchAdapter.Apply(state);
+        MatchRevision++;
+        localMatchSession.Restore(state, MatchRevision);
+        gameMap.ResetInteraction();
+        Set_castle_buttons(); Update_player_info();
+        uiManager.turn_number.text = "Turn\n" + CurrentRound;
+        CenterCameraOnActiveTeam(); gameMap.Check_win();
     }
 
     private void CenterCameraOnActiveTeam()
@@ -346,7 +495,6 @@ public class scr_game_contoller : MonoBehaviour
         gameMap.Clear_board();
         uiManager.tile_info.SetActive(false);
         uiManager.main_menu.SetActive(true);
-        menu_toggle = true;
         menu_lock = false;
         uiManager.buttons.SetActive(false);
         status = "Menu";
@@ -356,7 +504,6 @@ public class scr_game_contoller : MonoBehaviour
     public void Hide_Menu()
     {
         uiManager.main_menu.SetActive(false);
-        menu_toggle = false;
         menu_lock = false;
         uiManager.buttons.SetActive(true);
         status = "Select_tile";
@@ -470,6 +617,7 @@ public class scr_game_contoller : MonoBehaviour
         try
         {
             SaveGameValidator.Validate(snapshot, raceCatalog);
+            if (combatPresentation != null) combatPresentation.Cancel();
             loading = true;
             var state = snapshot.controller;
             staging = new GameObject("Loaded Match");
@@ -497,13 +645,14 @@ public class scr_game_contoller : MonoBehaviour
                 team.team_color = new Color(saved.teamColorR, saved.teamColorG, saved.teamColorB);
                 team.money = saved.money;
                 team.has_lost = saved.hasLost;
-                team.raceClass = raceCatalog[saved.raceClass];
+                team.isBot = snapshot.schemaVersion >= 3 && saved.isBot;
+                team.raceClass = SaveGameValidator.ResolveRace(saved, raceCatalog, snapshot.schemaVersion);
                 stagedTeams.Add(team);
                 owners.Add(team.team_name, team);
                 foreach (var savedUnit in saved.units)
                 {
                     if (savedUnit.hasDied || savedUnit.health <= 0) continue;
-                    GameObject prefab = savedUnit.isKing ? team.raceClass.Leader : team.raceClass.AvailableUnits.Find(p => p.GetComponent<Unit>().unit_name == savedUnit.unitName);
+                    GameObject prefab = SaveGameValidator.ResolveUnit(savedUnit, team.raceClass, snapshot.schemaVersion);
                     Tile tile = stagedTiles[savedUnit.positionX, savedUnit.positionY];
                     Unit unit = Instantiate(prefab, tile.transform.position, Quaternion.identity, staging.transform).GetComponent<Unit>();
                     unit.id = savedUnit.id;
@@ -520,6 +669,8 @@ public class scr_game_contoller : MonoBehaviour
                     if (unit.has_moved) unit.Finalize_turn();
                     unit.UpdateHealth();
                 }
+                int maximumSavedId = saved.units.Count == 0 ? 0 : saved.units.Max(u => u.id);
+                team.RestoreNextUnitId(Math.Max(saved.nextUnitId, checked(maximumSavedId + 1)));
             }
             foreach (var saved in state.gameMap.serializedTiles)
                 if (saved.hasCastle && !string.IsNullOrEmpty(saved.castleTeam))
@@ -534,9 +685,14 @@ public class scr_game_contoller : MonoBehaviour
             teams.Clear();
             teams.AddRange(stagedTeams);
             turn = state.turn;
+            randomState = state.randomState == 0 ? 0x6D2B79F5 : state.randomState;
+            if (snapshot.schemaVersion >= 2)
+            {
+                gameMap.stormWarmupRounds = state.stormWarmupRounds;
+                gameMap.stormRoundsPerShrink = state.stormRoundsPerShrink;
+            }
             MainMenu.build_mode = state.build_mode;
             MainMenu.battle_royale_mode = state.battle_royale_mode;
-            lastStormRound = CurrentRound;
             loadedMatchRoot = staging;
             staging.transform.SetParent(transform, true);
             foreach (Unit unit in stagedTeams.SelectMany(t => t.units)) unit.transform.SetParent(gameMap.unitsRoot, true);
@@ -546,6 +702,8 @@ public class scr_game_contoller : MonoBehaviour
             foreach (Tile old in oldTiles) if (old != null) { old.gameObject.SetActive(false); Destroy(old.gameObject); }
             if (oldRoot != null) { oldRoot.SetActive(false); Destroy(oldRoot); }
             committed = true;
+            MatchRevision++;
+            localMatchSession = null;
             staging.SetActive(true);
             ResolveDefeats();
             if (teams[turn % teams.Count].has_lost && teams.Count(t => !t.has_lost) > 1)
@@ -556,7 +714,6 @@ public class scr_game_contoller : MonoBehaviour
             uiManager.win_menu.SetActive(false);
             uiManager.loadMenu.gameObject.SetActive(false);
             uiManager.saveMenu.gameObject.SetActive(false);
-            menu_toggle = false;
             gameMap.ResetInteraction();
             Update_player_info();
             Set_castle_buttons();

@@ -20,6 +20,10 @@ public class Unit : MonoBehaviour
     public Sprite firstSpriteC;
     public Animator animator1;
     public Animator animator2;
+    public AnimationClip attackAnimation;
+    public AnimationClip hurtAnimation;
+    public AnimationClip deathAnimation;
+    private bool walking;
 
     public int unit_cost;
     public float max_health;
@@ -27,6 +31,9 @@ public class Unit : MonoBehaviour
     public int attack;
     public int movement;
     public int attack_range;
+    [SerializeField] private UnitCombatDefinition combatDefinition;
+    [SerializeField] private CombatDamageTable damageTable;
+    public UnitCombatDefinition CombatDefinition => combatDefinition;
 
     public int movDir = 1;
 
@@ -41,6 +48,9 @@ public class Unit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (animator1 == null && sprite != null) animator1 = sprite.GetComponent<Animator>();
+        if (animator2 == null && color != null) animator2 = color.GetComponent<Animator>();
+        PlayVisualState("Idle");
         firstSprite = sprite.sprite;
         firstSpriteC = color.sprite;
         UpdateHealth();
@@ -51,8 +61,7 @@ public class Unit : MonoBehaviour
     {
         if (current_path.Count > 0)
         {
-            //animator1.SetFloat("Speed", 1);
-            //animator2.SetFloat("Speed", 1);
+            SetWalking(true);
 
             if (Vector3.Distance(transform.position, current_path[0].transform.position) > 1)
             {
@@ -81,8 +90,7 @@ public class Unit : MonoBehaviour
                 if (current_path.Count == 0)
                 {
                     game_camera.Clear_follow();
-                    //animator1.SetFloat("Speed", 0);
-                    //animator2.SetFloat("Speed", 0);
+                    SetWalking(false);
                 }
             }
         }
@@ -91,6 +99,10 @@ public class Unit : MonoBehaviour
     public void Eliminate()
     {
         if (has_died) return;
+        // Confirmed combat already owns a visual copy. Other deaths (including the storm)
+        // get a copy here before the gameplay object is immediately deactivated.
+        if (sprite != null && !sprite.forceRenderingOff && deathAnimation != null)
+            UnitReactionPresentation.PlayDeath(this);
         hp = 0;
         has_died = true;
         StopMovement();
@@ -103,10 +115,59 @@ public class Unit : MonoBehaviour
     public void StopMovement()
     {
         current_path.Clear();
+        SetWalking(false);
         if (game_camera != null && game_camera.unit == this) game_camera.Clear_follow();
     }
 
-    public Combatant CombatStats => new Combatant(hp, max_health, attack, attack_range);
+    public void SetWalking(bool value)
+    {
+        if (walking == value) return;
+        walking = value;
+        PlayVisualState(value ? "Walk" : "Idle");
+    }
+    public void PlayVisualState(string state)
+    {
+        foreach (var animator in new[] { animator1, animator2 })
+            if (animator != null && animator.isActiveAndEnabled && animator.runtimeAnimatorController != null
+                && animator.HasState(0, Animator.StringToHash(state))) animator.Play(state, 0, 0);
+    }
+    public void PresentHealthChange(float health)
+    {
+        if (health >= hp || health <= 0 || sprite == null || sprite.forceRenderingOff) return;
+        PlayVisualState("Hurt");
+    }
+
+    public Combatant CombatStats => new Combatant(hp, max_health, attack, attack_range,
+        current_tile == null ? 0 : current_tile.DefenseStars);
+
+    private float BaseDamageAgainst(Unit defender)
+    {
+        if (damageTable == null || combatDefinition == null || defender.combatDefinition == null)
+            return attack / defender.max_health * 100;
+        // Preserve leader/stat bonuses on top of the matchup's baseline.
+        return damageTable.GetBaseDamage(combatDefinition, defender.combatDefinition)
+            * (attack / (float)combatDefinition.BaselineAttack)
+            * (defender.combatDefinition.BaselineHealth / defender.max_health);
+    }
+
+    public float BaselineDamageAgainst(Unit defender)
+        => damageTable != null && combatDefinition != null && defender.combatDefinition != null
+            ? damageTable.GetBaseDamage(combatDefinition, defender.combatDefinition)
+            : attack / defender.max_health * 100;
+
+    public CombatPrediction PredictCombat(Unit defender, int distance)
+        => CombatRules.Predict(CombatStats, defender.CombatStats, distance, BaseDamageAgainst(defender), defender.BaseDamageAgainst(this));
+
+    public CombatPrediction PredictCombatFrom(Unit defender, int distance, Tile destination)
+    {
+        var attacker = new Combatant(hp, max_health, attack, attack_range,
+            destination == null ? CombatStats.TerrainStars : destination.DefenseStars);
+        return CombatRules.Predict(attacker, defender.CombatStats, distance, BaseDamageAgainst(defender), defender.BaseDamageAgainst(this));
+    }
+
+    public CombatResult ResolveCombat(Unit defender, int distance, int attackLuck, int counterLuck)
+        => CombatRules.Resolve(CombatStats, defender.CombatStats, distance,
+            BaseDamageAgainst(defender), defender.BaseDamageAgainst(this), attackLuck, counterLuck);
 
     public void RestoreLeaderStatus(bool leader)
     {
@@ -116,7 +177,7 @@ public class Unit : MonoBehaviour
 
     public void Attack_unit(Unit unit, int attack_distance)
     {
-        CombatResult result = CombatRules.Resolve(CombatStats, unit.CombatStats, attack_distance);
+        CombatResult result = ResolveCombat(unit, attack_distance, UnityEngine.Random.Range(0, 10), UnityEngine.Random.Range(0, 10));
         unit.Take_damage(result.Damage);
         Take_damage(result.CounterDamage);
     }
@@ -125,6 +186,7 @@ public class Unit : MonoBehaviour
     {
         if (has_died) return;
         if (damage < 0 || float.IsNaN(damage) || float.IsInfinity(damage)) throw new ArgumentOutOfRangeException(nameof(damage));
+        PresentHealthChange(Mathf.Max(0, hp - damage));
         hp = Mathf.Clamp(hp - damage, 0, max_health);
         UpdateHealth();
         if (hp <= 0) Eliminate();
@@ -188,9 +250,9 @@ public class Unit : MonoBehaviour
     {
         is_king = option;
         if (!option || leaderBonusApplied) return;
-        max_health = (float)Math.Ceiling(max_health * 1.5f);
-        hp = (float)Math.Ceiling(hp * 1.5f);
-        attack = (int)Math.Ceiling(attack * 1.5f);
+        max_health = LeaderStats.Health(max_health);
+        hp = LeaderStats.Health(hp);
+        attack = LeaderStats.Attack(attack);
         leaderBonusApplied = true;
     }
 

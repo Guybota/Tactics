@@ -8,10 +8,10 @@ public class CoreRulesTests
     [Test]
     public void CounterUsesDefendersHealthAfterDamage()
     {
-        var result = CombatRules.Resolve(new Combatant(6.5f, 13, 4, 1), new Combatant(8, 8, 4, 2), 1);
-        Assert.That(result.DefenderHealth, Is.EqualTo(4.6f).Within(0.0001f));
-        Assert.That(result.CounterDamage, Is.EqualTo(1.745f).Within(0.0001f));
-        Assert.That(result.AttackerHealth, Is.EqualTo(4.755f).Within(0.0001f));
+        var result = CombatRules.Resolve(new Combatant(100, 100, 55, 1), new Combatant(100, 100, 55, 2), 1, 55, 55, 0, 0);
+        Assert.That(result.DefenderHealth, Is.EqualTo(45));
+        Assert.That(result.CounterDamage, Is.EqualTo(27));
+        Assert.That(result.AttackerHealth, Is.EqualTo(73));
     }
     [Test]
     public void LethalAttackNeverReceivesCounterDamage()

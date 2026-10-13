@@ -1,0 +1,1449 @@
+{
+    "SchemaVersion": 1,
+    "Version": "sha256.b02970b8e640ae4235a9adf5f9055448b17a58826bbce17527d6d66a1d37c57c",
+    "Units": [
+        {
+            "Id": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Health": 15.0,
+            "Attack": 6,
+            "Movement": 3,
+            "Range": 2,
+            "Cost": 1200
+        },
+        {
+            "Id": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Health": 13.0,
+            "Attack": 4,
+            "Movement": 4,
+            "Range": 1,
+            "Cost": 1300
+        },
+        {
+            "Id": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Health": 16.0,
+            "Attack": 5,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 1300
+        },
+        {
+            "Id": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Health": 13.0,
+            "Attack": 4,
+            "Movement": 4,
+            "Range": 1,
+            "Cost": 1750
+        },
+        {
+            "Id": "unit.3bcea12122b096646abd82955e14b60b",
+            "Health": 13.0,
+            "Attack": 4,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 750
+        },
+        {
+            "Id": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Health": 8.0,
+            "Attack": 4,
+            "Movement": 3,
+            "Range": 2,
+            "Cost": 1000
+        },
+        {
+            "Id": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Health": 13.0,
+            "Attack": 5,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 750
+        },
+        {
+            "Id": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Health": 13.0,
+            "Attack": 6,
+            "Movement": 3,
+            "Range": 3,
+            "Cost": 1200
+        },
+        {
+            "Id": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Health": 13.0,
+            "Attack": 4,
+            "Movement": 3,
+            "Range": 3,
+            "Cost": 1250
+        },
+        {
+            "Id": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Health": 14.0,
+            "Attack": 5,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 750
+        },
+        {
+            "Id": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Health": 11.0,
+            "Attack": 7,
+            "Movement": 3,
+            "Range": 2,
+            "Cost": 1400
+        },
+        {
+            "Id": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Health": 12.0,
+            "Attack": 4,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 500
+        },
+        {
+            "Id": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Health": 15.0,
+            "Attack": 6,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 1200
+        },
+        {
+            "Id": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Health": 14.0,
+            "Attack": 5,
+            "Movement": 4,
+            "Range": 1,
+            "Cost": 1400
+        },
+        {
+            "Id": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Health": 13.0,
+            "Attack": 4,
+            "Movement": 3,
+            "Range": 1,
+            "Cost": 0
+        },
+        {
+            "Id": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Health": 13.0,
+            "Attack": 4,
+            "Movement": 3,
+            "Range": 2,
+            "Cost": 750
+        }
+    ],
+    "Races": [
+        {
+            "Id": "race.elf",
+            "LeaderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "RecruitTypeIds": [
+                "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+                "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+                "unit.932922828f3e09147bbf76e18890e1e8",
+                "unit.b9bcea30599034e4e87f13eeb79aa73a"
+            ]
+        },
+        {
+            "Id": "race.human",
+            "LeaderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "RecruitTypeIds": [
+                "unit.12a03a226b31a1e488bbe7c48248e510",
+                "unit.3915c86c77400fb479d6a970a23eeb08",
+                "unit.3bcea12122b096646abd82955e14b60b",
+                "unit.7e92ebe9e22283644b86206ffe561f92",
+                "unit.b156382cdc3cb4d4aacee85223d64722"
+            ]
+        },
+        {
+            "Id": "race.orc",
+            "LeaderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "RecruitTypeIds": [
+                "unit.07696a17985356a4c9949d2a2a558d8c",
+                "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+                "unit.ceba44efe0578b54faf41e5779615eb7",
+                "unit.db128348332edf2478fd00e7d321ae6a"
+            ]
+        }
+    ],
+    "Damage": [
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 40.0
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 37.5
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 75.0
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 42.85714340209961
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 54.54545593261719
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 40.0
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 42.85714340209961
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 31.25
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 62.5
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 45.45454406738281
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 41.66666793823242
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 31.25
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 62.5
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 45.45454406738281
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 41.66666793823242
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 40.0
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 37.5
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 75.0
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 42.85714340209961
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 54.54545593261719
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 40.0
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 42.85714340209961
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 31.25
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 62.5
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 45.45454406738281
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 41.66666793823242
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 46.66666793823242
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 43.75
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 87.5
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 63.6363639831543
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 58.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 46.66666793823242
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 53.846153259277347
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 40.0
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 37.5
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 75.0
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 42.85714340209961
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 54.54545593261719
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 40.0
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 42.85714340209961
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 46.153846740722659
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 31.25
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 62.5
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 45.45454406738281
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 41.66666793823242
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 35.71428680419922
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 38.46154022216797
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.07696a17985356a4c9949d2a2a558d8c",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.0ed42afee72fd464099c9a52cf8f3b9e",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.12a03a226b31a1e488bbe7c48248e510",
+            "Percent": 25.0
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.3915c86c77400fb479d6a970a23eeb08",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.3bcea12122b096646abd82955e14b60b",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.7e92ebe9e22283644b86206ffe561f92",
+            "Percent": 50.0
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.83d8a885111fdbe4ca0677d9704cd8b6",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.932922828f3e09147bbf76e18890e1e8",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.b156382cdc3cb4d4aacee85223d64722",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.b809bd7e3fb449a499a9353cbc73b542",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.b9bcea30599034e4e87f13eeb79aa73a",
+            "Percent": 36.3636360168457
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.c3b2bd0a62e987a47a6cac40b023eff1",
+            "Percent": 33.33333206176758
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.ceba44efe0578b54faf41e5779615eb7",
+            "Percent": 26.66666603088379
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.db128348332edf2478fd00e7d321ae6a",
+            "Percent": 28.571428298950197
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.e4b24e2bf9eb76644ae510318a064191",
+            "Percent": 30.769229888916017
+        },
+        {
+            "AttackerTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "DefenderTypeId": "unit.ecb78757a455ae6479d191d7b0e39ca3",
+            "Percent": 30.769229888916017
+        }
+    ]
+}

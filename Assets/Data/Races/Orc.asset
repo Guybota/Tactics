@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec5d651988825c4fb4eac83e34e7f5f, type: 3}
+  m_Name: Orc
+  m_EditorClassIdentifier: Assembly-CSharp::RaceDefinition
+  stableId: race.orc
+  displayName: Orc
+  legacySaveName: Orc
+  leader: {fileID: 2687541231014190332, guid: b809bd7e3fb449a499a9353cbc73b542, type: 3}
+  units:
+  - {fileID: 2687541231014190332, guid: ceba44efe0578b54faf41e5779615eb7, type: 3}
+  - {fileID: 2687541231014190332, guid: c3b2bd0a62e987a47a6cac40b023eff1, type: 3}
+  - {fileID: 2687541231014190332, guid: db128348332edf2478fd00e7d321ae6a, type: 3}
+  - {fileID: 2687541231014190332, guid: 07696a17985356a4c9949d2a2a558d8c, type: 3}

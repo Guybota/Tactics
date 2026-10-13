@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Tactics.Core;
 
 public class MainMenu : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class MainMenu : MonoBehaviour
 
     public static List<RaceClass> classes;
     public  List<RaceClass> SerializedClasses;
+    [SerializeField] private RaceCatalog contentCatalog;
 
     public Toggle build_toggle;
     public Toggle br_toggle;
@@ -36,14 +38,57 @@ public class MainMenu : MonoBehaviour
     public GameObject createmapMenu;
     public GameObject player3_info;
     public GameObject player4_info;
+    [SerializeField] private LoadMenu loadMenu;
+    [SerializeField] private SettingsMenu settingsMenu;
+    private static GameSave pendingSave;
+    private static CustomMapData selectedCustomMap;
+    private static CustomMapData pendingEditorMap;
+    public static CustomMapData SelectedCustomMap => selectedCustomMap?.Clone();
+    private CustomMapSelect customMapSelect;
+    internal static GameSave TakePendingSave() { var save = pendingSave; pendingSave = null; return save; }
+    internal static CustomMapData TakePendingEditorMap() { var map = pendingEditorMap; pendingEditorMap = null; return map; }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetEditorRequest() => pendingEditorMap = null;
+    public void EditCustomMap(string id)
+    {
+        pendingEditorMap = new CustomMapRepository(Application.persistentDataPath).Read(id);
+        map_width = pendingEditorMap.width; map_height = pendingEditorMap.height;
+        SceneManager.LoadScene(2);
+    }
 
     public static RaceClass[] SelectedRaces = new RaceClass[4];
     public static List<RuntimeRaceDefinition> RaceDefinitions = new List<RuntimeRaceDefinition>();
     public static string[] SelectedRaceNames = new string[4];
+    public static bool[] BotPlayers = new bool[4];
+
+    public static void SetBotPlayer(int slot, bool isBot)
+    {
+        if (slot < 0 || slot >= 4) throw new ArgumentOutOfRangeException(nameof(slot));
+        BotPlayers[slot] = isBot;
+    }
 
     private void Awake()
     {
+        selectedCustomMap = null;
+        for (int i = 0; i < 4; i++) BotPlayers[i] = false;
         classes = SerializedClasses;
+        if (contentCatalog != null)
+        {
+            contentCatalog.Validate();
+            classes = new List<RaceClass>();
+            foreach (var definition in contentCatalog.Races)
+            {
+                var race = SerializedClasses.Find(candidate => candidate != null && candidate.Definition == definition);
+                if (race == null)
+                {
+                    var holder = new GameObject(definition.DisplayName + " Definition");
+                    holder.transform.SetParent(transform, false);
+                    race = holder.AddComponent<RaceClass>();
+                }
+                race.Bind(definition);
+                classes.Add(race);
+            }
+        }
         RaceDefinitions = new List<RuntimeRaceDefinition>();
         foreach (RaceClass race in classes) RaceDefinitions.Add(new RuntimeRaceDefinition(race));
     }
@@ -56,7 +101,6 @@ public class MainMenu : MonoBehaviour
 
     public void Start()
     {
-        classes = SerializedClasses;
         for (int i = 0; i < 4; i++)
         {
             SelectRace(i, classes[0]);
@@ -67,20 +111,29 @@ public class MainMenu : MonoBehaviour
         player4IsOn = false;
         build_mode = false;
         battle_royale_mode = false;
+        build_toggle.SetIsOnWithoutNotify(false);
+        br_toggle.SetIsOnWithoutNotify(false);
         firstMenu.SetActive(true);
         mapMenu.SetActive(false);
         createmapMenu.SetActive(false);
+        customMapSelect = GetComponent<CustomMapSelect>(); customMapSelect.Initialize(this);
     }
 
     public void PressPlay()
     {
+        HideExtraMenus();
         firstMenu.SetActive(false);
         createmapMenu.SetActive(false);
         mapMenu.SetActive(true);
     }
+    private void Update()
+    {
+        if (Input.GetButtonUp("Cancel") && !UiBackAction.TryCloseTop() && !firstMenu.activeSelf) PressBack();
+    }
 
     public void PressCreateMap()
     {
+        HideExtraMenus();
         firstMenu.SetActive(false);
         mapMenu.SetActive(false);
         createmapMenu.SetActive(true);
@@ -89,21 +142,75 @@ public class MainMenu : MonoBehaviour
     public void PressLoad()
     {
         firstMenu.SetActive(false);
-        mapMenu.SetActive(true);
+        mapMenu.SetActive(false); createmapMenu.SetActive(false);
+        if (settingsMenu != null) settingsMenu.gameObject.SetActive(false);
+        loadMenu.gameObject.SetActive(true); loadMenu.RefreshSaves();
+    }
+
+    public void PressSettings()
+    {
+        firstMenu.SetActive(false); mapMenu.SetActive(false); createmapMenu.SetActive(false);
+        if (loadMenu != null) loadMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(true);
+    }
+    private void HideExtraMenus()
+    {
+        if (loadMenu != null) loadMenu.gameObject.SetActive(false);
+        if (settingsMenu != null) settingsMenu.gameObject.SetActive(false);
+    }
+    public bool TryLoadSavedGame(string name, out string error)
+    {
+        error = null;
+        try
+        {
+            var save = new SaveGameRepository(Application.persistentDataPath).Read(name);
+            var races = new Dictionary<string, RaceClass>();
+            foreach (var race in classes) races[race.className] = race;
+            SaveGameValidator.Validate(save, races);
+            pendingSave = save;
+            SceneManager.LoadScene(1);
+            return true;
+        }
+        catch (Exception exception) { error = exception.Message; return false; }
     }
 
     public void PressStart()
     {
+        if (selectedCustomMap != null)
+        {
+            try { CustomMapValidator.ValidatePlayable(selectedCustomMap); ApplyMapParticipantCount(selectedCustomMap.playerCount); }
+            catch (Exception exception) { customMapSelect.ShowError(exception.Message); return; }
+        }
+        pendingSave = null;
         SceneManager.LoadScene(1);
+    }
+
+    public void SelectCustomMap(CustomMapData data)
+    {
+        if (data != null) CustomMapValidator.ValidateStructure(data);
+        selectedCustomMap = data?.Clone();
+        if (data != null)
+        {
+            map_width = data.width; map_height = data.height; ApplyMapParticipantCount(data.playerCount);
+        }
+        else { Update_width(); Update_height(); }
+        customMapSelect?.Refresh();
+    }
+    private void ApplyMapParticipantCount(int count)
+    {
+        player3IsOn = count >= 3; player4IsOn = count >= 4;
+        player3_info.SetActive(player3IsOn); player4_info.SetActive(player4IsOn);
     }
 
     public void PressStartCreateMap()
     {
+        pendingEditorMap = null;
         SceneManager.LoadScene(2);
     }
 
     public void PressBack()
     {
+        HideExtraMenus();
         firstMenu.SetActive(true);
         mapMenu.SetActive(false);
         createmapMenu.SetActive(false);
@@ -135,6 +242,7 @@ public class MainMenu : MonoBehaviour
 
     public void Add_player(int option)
     {
+        if (selectedCustomMap != null) return;
         switch (option)
         {
             case 3: 
@@ -152,6 +260,7 @@ public class MainMenu : MonoBehaviour
 
     public void Remove_player(int option)
     {
+        if (selectedCustomMap != null) return;
         switch(option)
         {
             case 3:

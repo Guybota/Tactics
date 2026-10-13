@@ -326,7 +326,7 @@ public class ResponsiveUiRegressionTests
     }
 
     [UnityTest]
-    public IEnumerator CombatPredictionReusesAuthoredPreviewsAndDisplaysExactHealthFills()
+    public IEnumerator CombatPredictionReusesAuthoredPreviewsAndDisplaysHealthIntervals()
     {
         Call(menu, "PressStart");
         yield return null;
@@ -355,15 +355,24 @@ public class ResponsiveUiRegressionTests
             }
             var attackerStats = (Tactics.Core.Combatant)attacker.GetType().GetProperty("CombatStats").GetValue(attacker);
             var defenderStats = (Tactics.Core.Combatant)defender.GetType().GetProperty("CombatStats").GetValue(defender);
-            Tactics.Core.CombatResult prediction = Tactics.Core.CombatRules.Resolve(attackerStats, defenderStats, 1);
+            var randomState = UnityEngine.Random.state;
+            var prediction = (Tactics.Core.CombatPrediction)Call(attacker, "PredictCombat", defender, 1);
             Call(attack, "Setup", attacker, defender, 1);
+            Assert.That(UnityEngine.Random.state, Is.EqualTo(randomState), "Preview must not consume luck rolls.");
             Canvas.ForceUpdateCanvases();
             yield return null;
             for (int i = 0; i < fields.Length; i++)
                 Assert.That(Get(attack, fields[i]), Is.SameAs(authored[i]), fields[i] + " must persist between predictions");
             Assert.That(attackPanel.GetComponentsInChildren<Transform>(true).Length, Is.EqualTo(descendants), "Opening another prediction must not allocate or destroy preview objects");
-            AssertHealthPrediction(authored[2], attackerStats.Health, prediction.AttackerHealth, attackerStats.MaxHealth);
-            AssertHealthPrediction(authored[3], defenderStats.Health, prediction.DefenderHealth, defenderStats.MaxHealth);
+            AssertHealthPrediction(authored[2], attackerStats.Health, prediction.MinAttackerHealth, attackerStats.MaxHealth);
+            AssertHealthPrediction(authored[3], defenderStats.Health, prediction.MinDefenderHealth, defenderStats.MaxHealth);
+            foreach (var field in new[] { "p1_stats_info", "p2_stats_info" })
+            {
+                var label = ((GameObject)Get(attack, field)).GetComponent(Type.GetType("TMPro.TextMeshProUGUI, Unity.TextMeshPro", true));
+                string text = (string)label.GetType().GetProperty("text").GetValue(label);
+                Assert.That(text, Does.Contain("–"), "Both stats cards must expose the luck interval.");
+                Assert.That(text, Does.Contain("After:"));
+            }
         }
     }
 
@@ -429,6 +438,7 @@ public class ResponsiveUiRegressionTests
             Resize(canvas, size);
             yield return null;
             Resize(canvas, size);
+            var visibleLabels = new List<Rect>();
             foreach (Component text in new[] { name, money })
             {
                 Call(text, "ForceMeshUpdate", false, false);
@@ -440,9 +450,12 @@ public class ResponsiveUiRegressionTests
                 // placeholder rect. The visible paper is the actual clipping boundary.
                 Vector3 glyphMin = panel.InverseTransformPoint(rect.TransformPoint(glyphs.min));
                 Vector3 glyphMax = panel.InverseTransformPoint(rect.TransformPoint(glyphs.max));
-                AssertInside(panel.rect, Rect.MinMaxRect(glyphMin.x, glyphMin.y, glyphMax.x, glyphMax.y), "HUD glyphs inside visible paper " + size);
+                var visible = Rect.MinMaxRect(glyphMin.x, glyphMin.y, glyphMax.x, glyphMax.y);
+                AssertInside(panel.rect, visible, "HUD glyphs inside visible paper " + size);
+                visibleLabels.Add(visible);
             }
-            Rect overlap = Intersect(BoundsInRoot(panel, (RectTransform)name.transform), BoundsInRoot(panel, (RectTransform)money.transform));
+            // Authored placeholder rects can overlap while their rendered text remains separate.
+            Rect overlap = Intersect(visibleLabels[0], visibleLabels[1]);
             Assert.That(overlap.width <= 0 || overlap.height <= 0, Is.True, "Player and money lines must not overlap " + size);
         }
     }

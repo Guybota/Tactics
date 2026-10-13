@@ -1,0 +1,1053 @@
+fileFormatVersion: 2
+guid: 742f06f0d44daad4e8c726412ab30e00
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7736149241700514959
+    second: Pixel Controls Atlas_0
+  - first:
+      213: -775925543600651042
+    second: Pixel Controls Atlas_1
+  - first:
+      213: -1010071899378427345
+    second: Pixel Controls Atlas_2
+  - first:
+      213: 6393304068749986404
+    second: Pixel Controls Atlas_3
+  - first:
+      213: 8323685897814716060
+    second: Pixel Controls Atlas_4
+  - first:
+      213: 5002438039148817510
+    second: Pixel Controls Atlas_5
+  - first:
+      213: 5030783579163462435
+    second: Pixel Controls Atlas_6
+  - first:
+      213: 7592298550007887171
+    second: Pixel Controls Atlas_7
+  - first:
+      213: 6068505353220237417
+    second: Pixel Controls Atlas_8
+  - first:
+      213: 1072768995856617306
+    second: Pixel Controls Atlas_9
+  - first:
+      213: 2826080199154278092
+    second: Pixel Controls Atlas_10
+  - first:
+      213: -3623330764983787670
+    second: Pixel Controls Atlas_11
+  - first:
+      213: -4123944078689165438
+    second: Pixel Controls Atlas_12
+  - first:
+      213: 3710028094958808095
+    second: Pixel Controls Atlas_13
+  - first:
+      213: 411185664116044404
+    second: Pixel Controls Atlas_14
+  - first:
+      213: -6408653631053643607
+    second: Pixel Controls Atlas_15
+  - first:
+      213: -1934813241662989597
+    second: Pixel Controls Atlas_16
+  - first:
+      213: 3466305921869216548
+    second: Pixel Controls Atlas_17
+  - first:
+      213: -7725371877902861679
+    second: Pixel Controls Atlas_18
+  - first:
+      213: -6959311651172021866
+    second: Pixel Controls Atlas_19
+  - first:
+      213: -4005175306838552796
+    second: Pixel Controls Atlas_20
+  - first:
+      213: -7513394572705823741
+    second: Pixel Controls Atlas_21
+  - first:
+      213: -4611584550733548467
+    second: Pixel Controls Atlas_22
+  - first:
+      213: -472194833791146530
+    second: Pixel Controls Atlas_23
+  - first:
+      213: -6593528207269835490
+    second: Pixel Controls Atlas_24
+  - first:
+      213: -8881581816358629342
+    second: Pixel Controls Atlas_25
+  - first:
+      213: -6588031885994970924
+    second: Pixel Controls Atlas_26
+  - first:
+      213: -3213701306011873903
+    second: Pixel Controls Atlas_27
+  - first:
+      213: -4033437649279481713
+    second: Pixel Controls Atlas_28
+  - first:
+      213: -3354677439828853133
+    second: Pixel Controls Atlas_29
+  - first:
+      213: 4791278923544364667
+    second: Pixel Controls Atlas_30
+  - first:
+      213: 6200273279239093629
+    second: Pixel Controls Atlas_31
+  - first:
+      213: -4208346131272854637
+    second: Pixel Controls Atlas_32
+  - first:
+      213: -331655620131797502
+    second: Pixel Controls Atlas_33
+  - first:
+      213: -7989910896804041125
+    second: Pixel Controls Atlas_34
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_0
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 991
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c77f85fb25c5b60800000000000000
+      internalID: 7736149241700514959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 369
+        width: 427
+        height: 601
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed4088144db5b35f0800000000000000
+      internalID: -775925543600651042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_2
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 322
+        width: 532
+        height: 650
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2ad1f785f08bf1f0800000000000000
+      internalID: -1010071899378427345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_3
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 751
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46a07e66d2499b850800000000000000
+      internalID: 6393304068749986404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_4
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 487
+        width: 541
+        height: 449
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9eac29293ca38370800000000000000
+      internalID: 8323685897814716060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_5
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 628
+        width: 9
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66ced5e74ea3c6540800000000000000
+      internalID: 5002438039148817510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_6
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 643
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32b08e1d20fe0d540800000000000000
+      internalID: 5030783579163462435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_7
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 645
+        width: 13
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 345fee53e434d5960800000000000000
+      internalID: 7592298550007887171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_8
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 641
+        width: 45
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 968af386779a73450800000000000000
+      internalID: 6068505353220237417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_9
+      rect:
+        serializedVersion: 2
+        x: 1154
+        y: 645
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5f061cc7bd33ee00800000000000000
+      internalID: 1072768995856617306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_10
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 613
+        width: 37
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cce1b59c7f0483720800000000000000
+      internalID: 2826080199154278092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_11
+      rect:
+        serializedVersion: 2
+        x: 1144
+        y: 607
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6f9561ddd757bdc0800000000000000
+      internalID: -3623330764983787670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_12
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 593
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28f1824c5bec4c6c0800000000000000
+      internalID: -4123944078689165438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_13
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 591
+        width: 6
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1c2db255eaac7330800000000000000
+      internalID: 3710028094958808095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_14
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 567
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 472be56de23d4b500800000000000000
+      internalID: 411185664116044404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_15
+      rect:
+        serializedVersion: 2
+        x: 1516
+        y: 575
+        width: 20
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a0c7802a73ef07a0800000000000000
+      internalID: -6408653631053643607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_16
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 545
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ea94f79b992625e0800000000000000
+      internalID: -1934813241662989597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_17
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 543
+        width: 13
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42bf8d3eedaca1030800000000000000
+      internalID: 3466305921869216548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_18
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 545
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19abec33537f9c490800000000000000
+      internalID: -7725371877902861679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_19
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 447
+        width: 41
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69987aedcee8b6f90800000000000000
+      internalID: -6959311651172021866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_20
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 482
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42fc8bc5742ca68c0800000000000000
+      internalID: -4005175306838552796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_21
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 469
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 304858c917f0bb790800000000000000
+      internalID: -7513394572705823741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_22
+      rect:
+        serializedVersion: 2
+        x: 1148
+        y: 483
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d44f8d9c84c5000c0800000000000000
+      internalID: -4611584550733548467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_23
+      rect:
+        serializedVersion: 2
+        x: 1232
+        y: 449
+        width: 29
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed5aa1bec4d6279f0800000000000000
+      internalID: -472194833791146530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_24
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 353
+        width: 61
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1dc92d87051f74a0800000000000000
+      internalID: -6593528207269835490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_25
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 0
+        width: 334
+        height: 417
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 220106805684eb480800000000000000
+      internalID: -8881581816358629342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_26
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 387
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d0b25297eb9294a0800000000000000
+      internalID: -6588031885994970924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_27
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 418
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d04f860b3a663d0800000000000000
+      internalID: -3213701306011873903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_28
+      rect:
+        serializedVersion: 2
+        x: 1008
+        y: 389
+        width: 65
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f88820bf3d95608c0800000000000000
+      internalID: -4033437649279481713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_29
+      rect:
+        serializedVersion: 2
+        x: 1119
+        y: 17
+        width: 400
+        height: 424
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37efbfe64aac171d0800000000000000
+      internalID: -3354677439828853133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 22
+        width: 597
+        height: 314
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b768da1bbca0e7240800000000000000
+      internalID: 4791278923544364667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_31
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 255
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7d746f62bbcb0650800000000000000
+      internalID: 6200273279239093629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_32
+      rect:
+        serializedVersion: 2
+        x: 974
+        y: 143
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39397998d73f895c0800000000000000
+      internalID: -4208346131272854637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_33
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 117
+        width: 58
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 206484e78f8b56bf0800000000000000
+      internalID: -331655620131797502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel Controls Atlas_34
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 59
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5ee8f82f522e1190800000000000000
+      internalID: -7989910896804041125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Pixel Controls Atlas_0: 7736149241700514959
+      Pixel Controls Atlas_1: -775925543600651042
+      Pixel Controls Atlas_10: 2826080199154278092
+      Pixel Controls Atlas_11: -3623330764983787670
+      Pixel Controls Atlas_12: -4123944078689165438
+      Pixel Controls Atlas_13: 3710028094958808095
+      Pixel Controls Atlas_14: 411185664116044404
+      Pixel Controls Atlas_15: -6408653631053643607
+      Pixel Controls Atlas_16: -1934813241662989597
+      Pixel Controls Atlas_17: 3466305921869216548
+      Pixel Controls Atlas_18: -7725371877902861679
+      Pixel Controls Atlas_19: -6959311651172021866
+      Pixel Controls Atlas_2: -1010071899378427345
+      Pixel Controls Atlas_20: -4005175306838552796
+      Pixel Controls Atlas_21: -7513394572705823741
+      Pixel Controls Atlas_22: -4611584550733548467
+      Pixel Controls Atlas_23: -472194833791146530
+      Pixel Controls Atlas_24: -6593528207269835490
+      Pixel Controls Atlas_25: -8881581816358629342
+      Pixel Controls Atlas_26: -6588031885994970924
+      Pixel Controls Atlas_27: -3213701306011873903
+      Pixel Controls Atlas_28: -4033437649279481713
+      Pixel Controls Atlas_29: -3354677439828853133
+      Pixel Controls Atlas_3: 6393304068749986404
+      Pixel Controls Atlas_30: 4791278923544364667
+      Pixel Controls Atlas_31: 6200273279239093629
+      Pixel Controls Atlas_32: -4208346131272854637
+      Pixel Controls Atlas_33: -331655620131797502
+      Pixel Controls Atlas_34: -7989910896804041125
+      Pixel Controls Atlas_4: 8323685897814716060
+      Pixel Controls Atlas_5: 5002438039148817510
+      Pixel Controls Atlas_6: 5030783579163462435
+      Pixel Controls Atlas_7: 7592298550007887171
+      Pixel Controls Atlas_8: 6068505353220237417
+      Pixel Controls Atlas_9: 1072768995856617306
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -42,6 +42,7 @@
 *.unitypackage
 /memoryprofiler/
 /[Rr]ecordings/
+/BotValidationResults/
 
 # OS metadata
 .DS_Store

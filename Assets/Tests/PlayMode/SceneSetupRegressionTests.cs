@@ -126,6 +126,17 @@ public class SceneSetupRegressionTests
     }
 
     [UnityTest]
+    public IEnumerator EditorCanClearHoverWithoutMatchPathRenderers()
+    {
+        Call(menu, "PressStartCreateMap");
+        yield return null; yield return null;
+        var creator = (Component)UnityEngine.Object.FindFirstObjectByType(Script("MapCreator"));
+        var map = Get(creator, "gameMap");
+        Assert.DoesNotThrow(() => Call(map, "Clear_line"));
+        Assert.DoesNotThrow(() => Call(map, "Draw_path_line"));
+    }
+
+    [UnityTest]
     public IEnumerator PaintingThroughHotbarUiCannotReplaceTheUnderlyingTile()
     {
         Call(menu, "PressStartCreateMap");

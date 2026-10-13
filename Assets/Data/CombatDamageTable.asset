@@ -1,0 +1,783 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad3e7499ea0049439637e890b3eef42, type: 3}
+  m_Name: CombatDamageTable
+  m_EditorClassIdentifier: Assembly-CSharp::CombatDamageTable
+  matchups:
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 31.25
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 62.5
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 41.666668
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 45.454544
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 31.25
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 62.5
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 41.666668
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 45.454544
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 37.5
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 75
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 42.857143
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 40
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 42.857143
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 40
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 54.545456
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 31.25
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 62.5
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 41.666668
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 45.454544
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 37.5
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 75
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 42.857143
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 40
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 42.857143
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 40
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 54.545456
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 25
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 28.571428
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 26.666666
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 30.76923
+  - attacker: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 36.363636
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 37.5
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 75
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 42.857143
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 40
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 42.857143
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 40
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 46.153847
+  - attacker: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 54.545456
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 31.25
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 62.5
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 41.666668
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 35.714287
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 33.333332
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 38.46154
+  - attacker: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 45.454544
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: b639b83f53cf5ac41931948464ee24d1, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 8787127f78f399d4282243d6465928ef, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 4e5ee0ae4a1d5fa4998a584959a232d0, type: 2}
+    baseDamagePercent: 43.75
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 3ef2558100bb8a6439ad3c15184033d9, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: f61904b555694ec4f83b4ecab3491460, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 036c544723e9978439439b48c5126cfd, type: 2}
+    baseDamagePercent: 87.5
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: b9d0b5c45648fa648ba4275d982a41df, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 76eb323fb07ed464a89a6eaab122cb43, type: 2}
+    baseDamagePercent: 46.666668
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 15933afe1c9df2d4fab4285aa0ab5e07, type: 2}
+    baseDamagePercent: 58.333332
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: b12820bcf6cbf20469d5559e8b1009f4, type: 2}
+    baseDamagePercent: 50
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 7bd100b4a1e046648b0b870e343ff500, type: 2}
+    baseDamagePercent: 46.666668
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 1e2edd70975cb754f956aef7f6bafe1b, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: d7e359486b1fc874f919ac34e2794fc9, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: e659f84d0ab16b64494a79624a1e6184, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 74baf43c8bb609e49a401e03473d7cbf, type: 2}
+    baseDamagePercent: 53.846153
+  - attacker: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    defender: {fileID: 11400000, guid: 9f3353e4d9675f546b8e3ffc436309a3, type: 2}
+    baseDamagePercent: 63.636364

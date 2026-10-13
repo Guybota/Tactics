@@ -13,7 +13,7 @@ public sealed class SaveGameRepository
     public GameSave Read(string name)
     {
         GameSave save = JsonUtility.FromJson<GameSave>(files.Read(name));
-        if (save == null || save.controller == null || save.schemaVersion < 0 || save.schemaVersion > 1)
+        if (save == null || save.controller == null || save.schemaVersion < 0 || save.schemaVersion > GameSave.CurrentVersion)
             throw new InvalidDataException("Invalid or unsupported save format.");
         save.saveName = name;
         return save;
@@ -36,7 +36,6 @@ public sealed class SaveGameRepository
     public void Write(string name, GameSave save)
     {
         if (save == null) throw new ArgumentNullException(nameof(save));
-        save.schemaVersion = 1;
         save.saveName = name;
         files.Write(name, JsonUtility.ToJson(save));
         UpdateIndex();

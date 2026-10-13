@@ -36,6 +36,7 @@ public class Tile : MonoBehaviour
 
     public bool has_castle = false;
     public GameObject castle;
+    public int DefenseStars => has_castle ? 3 : forest != null ? 2 : 1;
 
     void Start() {
         text = text_object.GetComponent<TextMeshProUGUI>();

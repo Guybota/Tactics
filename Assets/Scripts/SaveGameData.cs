@@ -52,6 +52,7 @@ public class SerializeableDateTime
 [System.Serializable]
 public class GameSave
 {
+    public const int CurrentVersion = 3;
     public int schemaVersion;
     public SerializableGameController controller;
     public string saveName;
@@ -59,7 +60,7 @@ public class GameSave
 
     public GameSave(scr_game_contoller gameController, string saveName)
     {
-        schemaVersion = 1;
+        schemaVersion = CurrentVersion;
         controller = new SerializableGameController(gameController);
         this.saveName = saveName;
         date = new SerializeableDateTime(DateTime.Now);
@@ -74,6 +75,9 @@ public class SerializableGameController
     public SerializableMap gameMap;
     public bool build_mode;
     public bool battle_royale_mode;
+    public uint randomState;
+    public int stormWarmupRounds;
+    public int stormRoundsPerShrink;
 
     // Constructor to convert scr_game_contoller instance to SerializableGameController
     public SerializableGameController(scr_game_contoller gameController)
@@ -87,6 +91,9 @@ public class SerializableGameController
         gameMap = new SerializableMap(gameController.gameMap);
         build_mode = MainMenu.build_mode;
         battle_royale_mode = MainMenu.battle_royale_mode;
+        randomState = gameController.RandomState;
+        stormWarmupRounds = gameController.gameMap.stormWarmupRounds;
+        stormRoundsPerShrink = gameController.gameMap.stormRoundsPerShrink;
     }
 }
 
@@ -95,23 +102,29 @@ public class SerializableTeam
 {
     public string teamName;
     public string raceClass;
+    public string raceId;
+    public int nextUnitId;
     public float teamColorR;
     public float teamColorG;
     public float teamColorB;
     public List<SerializableUnit> units;
     public int money;
     public bool hasLost;
+    public bool isBot;
 
     // Constructor to convert Team instance to SerializableTeam
     public SerializableTeam(Team team)
     {
         teamName = team.team_name;
         raceClass = team.raceClass.className;
+        raceId = team.raceClass.Id;
+        nextUnitId = team.NextUnitId;
         teamColorR = team.team_color.r;
         teamColorG = team.team_color.g;
         teamColorB = team.team_color.b;
         money = team.money;
         hasLost = team.has_lost;
+        isBot = team.isBot;
 
         units = new List<SerializableUnit>();
         foreach (Unit unit in team.units)
@@ -125,6 +138,7 @@ public class SerializableTeam
 public class SerializableUnit
 {
     public string unitName;
+    public string unitTypeId;
     public bool isKing;
     public int id;
     public bool hasMoved;
@@ -141,6 +155,7 @@ public class SerializableUnit
     public SerializableUnit(Unit unit)
     {
         unitName = unit.unit_name;
+        unitTypeId = UnityMatchAdapter.TypeId(unit);
         isKing = unit.is_king;
         id = unit.id;
         hasMoved = unit.has_moved;

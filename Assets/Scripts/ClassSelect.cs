@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class ClassSelect : MonoBehaviour
 {
@@ -8,12 +10,25 @@ public class ClassSelect : MonoBehaviour
     public PreviewUnit previewUnit;
     public RaceClass selectedClass;
     private int index;
+    [SerializeField] private Button controlButton;
+    public int PlayerSlot => player - 1;
+    public void ToggleControl()
+    {
+        MainMenu.SetBotPlayer(PlayerSlot, !MainMenu.BotPlayers[PlayerSlot]);
+        RefreshControl();
+    }
+    private void RefreshControl()
+    {
+        if (controlButton != null) controlButton.GetComponentInChildren<TextMeshProUGUI>().text = MainMenu.BotPlayers[PlayerSlot] ? "Bot" : "Human";
+    }
 
     void Start()
     {
         index = 0;
         selectedClass = MainMenu.classes[index];
         previewUnit.Set(selectedClass.Leader.GetComponent<Unit>());
+        if (controlButton != null) controlButton.onClick.AddListener(ToggleControl);
+        RefreshControl();
     }
 
     public void Next()

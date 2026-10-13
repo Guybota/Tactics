@@ -17,6 +17,14 @@ public class AudioManager : MonoBehaviour
     public AudioClip attack;
     public AudioClip capture;
 
+    private void OnEnable() { GamePreferences.Changed += ApplyVolumes; ApplyVolumes(); }
+    private void OnDisable() { GamePreferences.Changed -= ApplyVolumes; }
+    private void ApplyVolumes()
+    {
+        if (musicSource != null) musicSource.volume = GamePreferences.MusicVolume;
+        if (SFXSource != null) SFXSource.volume = GamePreferences.EffectsVolume;
+    }
+
     private void Start()
     {
         musicSource.clip = background;

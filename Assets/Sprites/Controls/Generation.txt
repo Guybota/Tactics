@@ -1,0 +1,20 @@
+Pixel UI controls generated with the built-in image generation tool, using
+Assets/Sprites/Buttons/UI_Paper_Button_Small_Lock_01a1.png as a style reference.
+
+Initial prompt:
+Create one cohesive pixel art UI sprite atlas for a medieval fantasy tactics
+game, transparent background. Six sprites in a three-column, two-row grid:
+empty parchment checkbox, dark brown checkmark, recessed slider rail,
+golden ochre slider fill, parchment slider thumb with two grip lines, pressed
+version of that thumb. Crisp block pixels, no antialiasing, no text. Palette:
+#3e281e #77503a #c88746 #dcaf74 #f1d1a0 #fff0cc.
+
+Refinement prompt:
+Keep the six sprites and grid. Remove glow, shadow haze, gradients, vignette
+and background pixels. Transparent ground outside the silhouettes. Crisp
+pixel edges using the shared flat palette. Strengthen the checkmark. No text.
+
+The individual PNGs are cropped from the atlas without altering the artwork.
+Unity import: Point filtering, no mipmaps, no compression, 100 pixels per unit.
+Slider track/fill use sliced borders. The sprites are assigned in the scenes;
+no runtime style generator, scaling or repositioning is required.
