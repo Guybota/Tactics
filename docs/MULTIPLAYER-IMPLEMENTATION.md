@@ -195,3 +195,8 @@ was verified; the button alone did not populate the browser clipboard during the
 The build was uploaded with Butler to `guybota/lords-of-conflict:web`, user version
 `multiplayer-20261013-e1b6621`, build `2120142`, replacing the prior WebGL build.
 The multiplayer backend continues to use **development**.
+
+Publication status checked at **2026-10-13 14:48 UTC**: Butler reports build
+`2120142` as `queued`. The current completed channel head is still `2116176`;
+the public browser page was observed serving that earlier build. Upload and Git
+push succeeded; browser activation is pending itch.io's processing queue.
