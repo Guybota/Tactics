@@ -169,3 +169,29 @@ against development. Screenshots were inspected for menu layout and HUD overlap.
 The client now rejects replies changing the map size, participant races, immutable
 terrain/rules or existing unit identities before persisting them. Dynamic recruits,
 deaths, castle ownership and storm flags remain valid confirmed changes.
+
+## WebGL publication verification — 2026-10-13
+
+The WebGL release from source commit `e1b662151f6a30401a7b2a233421ac83632e48b1`
+built successfully using **Web - Desktop - Release**: zero build errors, 20.08 MiB.
+The compiler reported existing C#/package shader warnings; this is not a warning-free build.
+
+Before publishing, `Tools/PrepareItchWeb.ps1` explicitly enables Unity's
+`config.autoSyncPersistentDataPath` in the generated HTML and writes public source
+metadata to `release.json`. This makes recovery files persist to browser IndexedDB
+on changes. Browser storage can still be disabled/cleared by the user; autosync
+does not guarantee a write has completed if the browser terminates immediately.
+
+Two browser clients on distinct localhost origins created/joined a real development
+match, opened the same board, exchanged both turns and observed synchronized state.
+Reloading the first client retained its authenticated identity and invitation;
+**Resume last match** reopened the confirmed board at round 2 with 2000 money.
+
+Browser copy behavior: Unity's copy button sets its internal copy buffer. Press
+**Ctrl+C** (or **Cmd+C** on macOS) after **Copy invitation** to copy it to the system
+clipboard, then paste into the other client's invitation field. This keyboard path
+was verified; the button alone did not populate the browser clipboard during the test.
+
+The build was uploaded with Butler to `guybota/lords-of-conflict:web`, user version
+`multiplayer-20261013-e1b6621`, build `2120142`, replacing the prior WebGL build.
+The multiplayer backend continues to use **development**.
