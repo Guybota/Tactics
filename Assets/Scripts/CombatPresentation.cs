@@ -9,6 +9,8 @@ public sealed class CombatPresentation : MonoBehaviour
 {
     private scr_game_contoller controller;
     private Visual attacker, defender;
+    private scr_camera followedCamera;
+    private Transform focusedTarget;
     public bool IsPlaying => attacker != null;
     public bool IsMoving { get; private set; }
     public bool IsCounterAttacking { get; private set; }
@@ -19,6 +21,7 @@ public sealed class CombatPresentation : MonoBehaviour
     {
         Cancel();
         controller = match;
+        followedCamera = match.game_camera != null ? match.game_camera.GetComponent<scr_camera>() : null;
         attacker = new Visual(actor, transform, "Attack presentation");
         defender = new Visual(target, transform, "Defender presentation");
     }
@@ -30,6 +33,7 @@ public sealed class CombatPresentation : MonoBehaviour
     private IEnumerator Sequence(List<Vector3> path, Vector3 destination, bool counterAttack, bool targetDied,
         bool actorDied, bool targetTookDamage, bool actorTookDamage)
     {
+        FocusBot(attacker);
         IsMoving = path.Count > 0;
         if (IsMoving) attacker.BeginState("Walk");
         foreach (var point in path)
@@ -40,12 +44,16 @@ public sealed class CombatPresentation : MonoBehaviour
                 if (!Paused)
                 {
                     attacker.Root.transform.position = Vector3.MoveTowards(attacker.Root.transform.position, point, 400 * Time.deltaTime);
+                    if (followedCamera != null && followedCamera.PresentationTarget == attacker.Root.transform)
+                        followedCamera.RefreshPresentationFocus();
                     attacker.Tick(Time.deltaTime);
                 }
                 yield return null;
             }
         }
         attacker.Root.transform.position = destination;
+        if (followedCamera != null && followedCamera.PresentationTarget == attacker.Root.transform)
+            followedCamera.RefreshPresentationFocus();
         IsMoving = false;
         attacker.Face(defender.Root.transform.position);
         defender.Face(destination);
@@ -55,10 +63,18 @@ public sealed class CombatPresentation : MonoBehaviour
         if (counterAttack)
         {
             IsCounterAttacking = true;
+            FocusBot(defender);
             yield return Animate(defender, "Attack");
             if (actorDied || actorTookDamage) yield return Animate(attacker, actorDied ? "Death" : "Hurt");
         }
         Cancel();
+    }
+
+    private void FocusBot(Visual visual)
+    {
+        if (followedCamera == null || !visual.IsBot) return;
+        focusedTarget = visual.Root.transform;
+        followedCamera.FollowPresentation(focusedTarget);
     }
 
     private IEnumerator Animate(Visual visual, string state)
@@ -80,6 +96,9 @@ public sealed class CombatPresentation : MonoBehaviour
     public void Cancel()
     {
         StopAllCoroutines();
+        if (followedCamera != null && focusedTarget != null && followedCamera.PresentationTarget == focusedTarget)
+            followedCamera.Clear_follow();
+        followedCamera = null; focusedTarget = null;
         attacker?.Dispose(); defender?.Dispose();
         attacker = defender = null;
         IsCounterAttacking = false;
@@ -95,10 +114,13 @@ public sealed class CombatPresentation : MonoBehaviour
         private readonly bool[] previousHidden;
         private readonly Animator[] animators;
         private readonly Unit unit;
+        private readonly Health_bar healthDisplay;
+        public bool IsBot => unit != null && unit.team != null && unit.team.isBot;
 
         public Visual(Unit unit, Transform parent, string name)
         {
             this.unit = unit;
+            healthDisplay = unit.GetComponentInChildren<Health_bar>(true);
             Root = new GameObject(name);
             Root.transform.SetParent(parent, false);
             Root.transform.position = unit.transform.position;
@@ -134,6 +156,13 @@ public sealed class CombatPresentation : MonoBehaviour
                 }
                 source.forceRenderingOff = true;
             }
+            if (healthDisplay != null)
+            {
+                var top = copies[1] != null ? copies[1] : copies[0];
+                if (top != null)
+                    healthDisplay.SetPresentationSorting(top.sortingLayerID,
+                        Mathf.Max(copies[0] != null ? copies[0].sortingOrder : top.sortingOrder, top.sortingOrder) + 1);
+            }
         }
 
         public void Face(Vector3 target)
@@ -164,6 +193,7 @@ public sealed class CombatPresentation : MonoBehaviour
         }
         public void Dispose()
         {
+            if (healthDisplay != null) healthDisplay.ClearPresentationSorting();
             for (int i = 0; i < originals.Length; i++)
                 if (originals[i] != null) originals[i].forceRenderingOff = previousHidden[i];
             if (Root != null) { Root.SetActive(false); Object.Destroy(Root); }

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using Tactics.Core;
 
-public class scr_game_contoller : MonoBehaviour
+public partial class scr_game_contoller : MonoBehaviour
 {
     public GameObject grass_tile;
     public GameObject forest_tile;
@@ -48,7 +48,7 @@ public class scr_game_contoller : MonoBehaviour
     private uint randomState = 0x6D2B79F5;
     public uint RandomState => randomState;
     public int MatchRevision { get; private set; }
-    public bool IsBotTurn => turn >= 0 && teams.Count > 0 && teams[turn % teams.Count].isBot;
+    public bool IsBotTurn => !IsOnlineMatch && turn >= 0 && teams.Count > 0 && teams[turn % teams.Count].isBot;
     public bool CanAdvanceBot => !loading && status == "Select_tile" && IsBotTurn
         && !LandscapeOrientation.InputBlocked && Time.timeScale > 0;
     public bool CanPlanBot => CanAdvanceBot && !teams.SelectMany(t => t.units).Any(u => u != null && u.IsMoving);
@@ -72,10 +72,11 @@ public class scr_game_contoller : MonoBehaviour
             return localMatchSession;
         }
     }
-    public MatchState GetStateSnapshot() => LocalSession.Snapshot();
+    public MatchState GetStateSnapshot() => IsOnlineMatch ? onlineSession.Snapshot() : LocalSession.Snapshot();
     private UnityMatchAdapter MatchAdapter => matchAdapter ?? (matchAdapter = new UnityMatchAdapter(this, raceCatalog.Values));
     public UnitKey GetUnitKey(Unit unit) => MatchAdapter.Key(unit);
-    public bool IsActionLegal(MatchAction action) => MatchAdapter.Engine.Validate(GetStateSnapshot(), action).Success;
+    public bool IsActionLegal(MatchAction action) => (!IsOnlineMatch || CanControlOnlineTurn && action != null && action.Actor.Player == onlinePlayerSlot)
+        && MatchAdapter.Engine.Validate(GetStateSnapshot(), action).Success;
     public bool CanStartBuild(Unit unit, Tile destination)
         => MatchAdapter.Engine.ValidateBuildStart(GetStateSnapshot(), GetUnitKey(unit), new GridPosition(destination.position_x, destination.position_y)).Success;
     public HashSet<GridPosition> GetBuildTargets(Unit unit, Tile destination)
@@ -84,6 +85,7 @@ public class scr_game_contoller : MonoBehaviour
     public bool TryExecuteAction(MatchAction action, out string error)
     {
         error = null;
+        if (IsOnlineMatch) { error = "Use asynchronous submission for an online match."; return false; }
         if (loading || status == "Over" || status == "Menu" || status == "Saving" || status == "Loading")
         { error = "The match is not accepting actions."; return false; }
         if (action == null) { error = "Action is required."; return false; }
@@ -178,6 +180,13 @@ public class scr_game_contoller : MonoBehaviour
                     button.onClick.AddListener(EndTurnFromMenu);
                 }
         gameObject.AddComponent<TouchMatchControls>().Initialize(this);
+        var online = OnlineMatchRuntime.TakePending();
+        if (online != null)
+        {
+            try { InitializeOnlineMatch(online.Session, online.PlayerSlot, online.ContentVersion); }
+            catch (Exception) { Debug.LogWarning("Could not open the online board. Return to Online to retry."); SceneManager.LoadScene(0); }
+            return;
+        }
         var pending = MainMenu.TakePendingSave();
         if (pending != null)
         {
@@ -302,6 +311,7 @@ public class scr_game_contoller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateOnlineMatch();
         if (status == "Over" || loading) return;
         if (Input.GetButtonUp("Cancel"))
         {
@@ -310,7 +320,7 @@ public class scr_game_contoller : MonoBehaviour
 
         if (gameMap.cooldown <= 0)
         {
-            if (status == "Select_tile" && !IsBotTurn && !IsCombatAnimating)
+            if (status == "Select_tile" && !IsBotTurn && !IsCombatAnimating && (!IsOnlineMatch || CanControlOnlineTurn))
             {
                 if (!WorldTouchInput.SuppressMouse)
                 { if (Input.mousePresent) gameMap.Hover_mouse(hover_toggle); Select_tile(); }
@@ -324,7 +334,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public void ProcessMenuOption(string option)
     {
-        if (status == "Over" || loading || IsBotTurn || IsCombatAnimating) return;
+        if (status == "Over" || loading || IsBotTurn || IsCombatAnimating || IsOnlineMatch && !CanControlOnlineTurn) return;
         // Handle the chosen menu option (e.g., "Wait" or "Attack")
         switch (option)
         {
@@ -363,8 +373,9 @@ public class scr_game_contoller : MonoBehaviour
 
     public void ProcessSpawnOption(string option)
     {
-        if (IsBotTurn || IsCombatAnimating) return;
-        gameMap.Handle_spawn(option);
+        if (IsBotTurn || IsCombatAnimating || IsOnlineMatch && !CanControlOnlineTurn) return;
+        if (IsOnlineMatch) SpawnOnline(option);
+        else gameMap.Handle_spawn(option);
     }
     void Select_tile()
     {
@@ -381,7 +392,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public bool SelectWorldAt(Vector2 screenPosition)
     {
-        if (loading || IsCombatAnimating || IsBotTurn || status != "Select_tile" || gameMap.cooldown > 0 || !WorldPointer.TryGetTile(screenPosition, out Tile tile)) return false;
+        if (loading || IsCombatAnimating || IsBotTurn || IsOnlineMatch && !CanControlOnlineTurn || status != "Select_tile" || gameMap.cooldown > 0 || !WorldPointer.TryGetTile(screenPosition, out Tile tile)) return false;
         gameMap.HoverAt(screenPosition);
         gameMap.Select_tile(tile, teams[turn % teams.Count]);
         return true;
@@ -408,9 +419,9 @@ public class scr_game_contoller : MonoBehaviour
 
     public void Finalize_turn()
     {
-        if (status == "Over" || IsBotTurn || IsCombatAnimating || loading || status == "Menu" || status == "Saving" || status == "Loading") return;
+        if (status == "Over" || IsBotTurn || IsCombatAnimating || loading || IsOnlineMatch && !CanControlOnlineTurn || status == "Menu" || status == "Saving" || status == "Loading") return;
         gameMap.Finalize_turn();
-        TryExecuteAction(MatchAction.EndTurn(turn % teams.Count), out _);
+        DispatchAction(MatchAction.EndTurn(turn % teams.Count));
     }
     public void EndTurnFromMenu()
     {
@@ -423,6 +434,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public MatchState ResolveOutcome()
     {
+        if (IsOnlineMatch) return onlineSession.Snapshot();
         var state = GetStateSnapshot();
         MatchEngine.ResolveDefeats(state);
         MatchAdapter.ApplyEliminations(state);
@@ -444,6 +456,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public void Initialize_turn()
     {
+        if (IsOnlineMatch) return;
         var state = GetStateSnapshot();
         MatchEngine.ResolveDefeats(state);
         if (!state.IsOver)
@@ -524,6 +537,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public void Show_save_menu() 
     {
+        if (IsOnlineMatch) { onlineMessage = "Online progress is saved automatically."; return; }
         game_camera.GetComponent<scr_camera>().Lock_camera();
         uiManager.player_info.SetActive(false);
         uiManager.turn_info.SetActive(false);
@@ -547,6 +561,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public void Show_load_menu()
     {
+        if (IsOnlineMatch) { onlineMessage = "Return to Online to resume a match."; return; }
         game_camera.GetComponent<scr_camera>().Lock_camera();
         uiManager.player_info.SetActive(false);
         uiManager.turn_info.SetActive(false);
@@ -569,6 +584,7 @@ public class scr_game_contoller : MonoBehaviour
     // Function to save game data to JSON
     public void SaveGameData()
     {
+        if (IsOnlineMatch) return;
         string name = uiManager.saveMenu.SaveName.text;
         if (!SaveFileStore.IsValidName(name))
         {
@@ -600,6 +616,7 @@ public class scr_game_contoller : MonoBehaviour
 
     public void LoadSave(string saveName)
     {
+        if (IsOnlineMatch) return;
         try
         {
             var snapshot = new SaveGameRepository(Application.persistentDataPath).Read(saveName);
@@ -612,6 +629,7 @@ public class scr_game_contoller : MonoBehaviour
     public bool TryLoadSnapshot(GameSave snapshot, out string error)
     {
         error = null;
+        if (IsOnlineMatch) { error = "A local save cannot replace an online match."; return false; }
         GameObject staging = null;
         bool committed = false;
         try

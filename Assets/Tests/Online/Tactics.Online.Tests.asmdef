@@ -1,0 +1,6 @@
+{
+  "name": "Tactics.Online.Tests",
+  "references": ["Tactics.Core", "Tactics.Online"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

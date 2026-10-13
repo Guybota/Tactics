@@ -20,6 +20,8 @@ public class scr_camera : MonoBehaviour
     public float maxZoom = 500;
 
     private bool locked;
+    private Transform presentationTarget;
+    public Transform PresentationTarget => presentationTarget;
     private float targetZoom, zoomVelocity, lastAppliedZoom;
     private Vector3 dragWorldAnchor, keyboardVelocity, keyboardSmoothing;
     private Vector2 zoomPointer;
@@ -37,9 +39,10 @@ public class scr_camera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (is_following && unit != null)
+        if (is_following && (presentationTarget != null || unit != null))
         {
-            transform.position = new Vector3(unit.transform.position.x, unit.transform.position.y, -10);
+            var target = presentationTarget != null ? presentationTarget : unit.transform;
+            transform.position = new Vector3(target.position.x, target.position.y, -10);
             return;
         }
         if (WorldTouchInput.SuppressMouse) return;
@@ -47,6 +50,27 @@ public class scr_camera : MonoBehaviour
             (Input.GetButton("Up") ? 1 : 0) - (Input.GetButton("Down") ? 1 : 0));
         ApplyNavigation(Input.mouseScrollDelta.y, Input.mousePosition, keys, Input.GetMouseButtonDown(1),
             Input.GetMouseButton(1), Input.GetMouseButtonUp(1), WorldPointer.IsOverUI(Input.mousePosition), Time.unscaledDeltaTime);
+    }
+    private void LateUpdate()
+    {
+        // Combat copies can move after this camera's Update. Follow the rendered
+        // position in the same frame, even if the confirmed gameplay unit is dead.
+        RefreshPresentationFocus();
+    }
+    public void RefreshPresentationFocus()
+    {
+        if (is_following && presentationTarget != null)
+            transform.position = new Vector3(presentationTarget.position.x, presentationTarget.position.y, -10);
+    }
+
+    public void FollowPresentation(Transform target)
+    {
+        if (target == null) return;
+        ResetNavigation();
+        unit = null;
+        presentationTarget = target;
+        is_following = true;
+        RefreshPresentationFocus();
     }
     public void ApplyTouchNavigation(Vector2 previousFocus, Vector2 focus, float zoomRatio)
     {
@@ -138,12 +162,14 @@ public class scr_camera : MonoBehaviour
     {
         ResetNavigation();
         this.unit = unit;
+        presentationTarget = null;
         is_following = true;
     }
 
     public void Clear_follow()
     {
         unit = null;
+        presentationTarget = null;
         is_following = false;
         ResetNavigation();
     }

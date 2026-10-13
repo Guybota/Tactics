@@ -1,0 +1,11 @@
+{
+  "name": "Tactics.Online",
+  "references": [
+    "Tactics.Core",
+    "Unity.Services.Core",
+    "Unity.Services.Core.Environments",
+    "Unity.Services.Authentication",
+    "Unity.Services.CloudCode"
+  ],
+  "autoReferenced": true
+}

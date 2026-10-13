@@ -1,0 +1,7 @@
+bin/
+obj/
+.sdk/
+.packages/
+.nuget-http/
+.nuget-plugins/
+artifacts/

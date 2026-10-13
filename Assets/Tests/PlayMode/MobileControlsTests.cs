@@ -154,6 +154,40 @@ public class MobileControlsTests
         Assert.That(Get(Get(controller, "gameMap"), "selected_tile"), Is.EqualTo(tile.gameObject));
         Assert.That(((GameObject)Get(Get(controller, "uiManager"), "tile_info")).activeSelf, Is.True);
     }
+
+    [UnityTest] public IEnumerator TappingSpentEnemyShowsItsMovementRangeWithoutActing()
+    {
+        yield return FixedGame();
+        var controller = Find("scr_game_contoller");
+        var map = Get(controller, "gameMap");
+        var teams = (IList)Get(controller, "teams");
+        var enemy = (Component)Call(teams[1], "Get_king");
+        enemy.GetType().GetField("has_moved").SetValue(enemy, true);
+        var origin = (Component)Get(enemy, "current_tile");
+        Camera.main.transform.position = origin.transform.position + new Vector3(0, 0, -10);
+        map.GetType().GetField("cooldown").SetValue(map, 0f);
+        int revision = (int)controller.GetType().GetProperty("MatchRevision").GetValue(controller);
+        var originalPosition = enemy.transform.position;
+        Tap(Camera.main.WorldToScreenPoint(origin.transform.position));
+        Assert.That(Get(map, "selected_tile"), Is.EqualTo(origin.gameObject));
+        Assert.That(Get(map, "is_unit_selected"), Is.True, "An enemy's spent turn must not hide its inspection range.");
+        int reachable = 0;
+        foreach (Component tile in (Array)Get(map, "tiles"))
+            if ((string)Get(tile, "state") == "Can_move") reachable++;
+        Assert.That(reachable, Is.GreaterThan(1));
+        Assert.That(((GameObject)Get(Get(controller, "uiManager"), "tile_info")).activeSelf, Is.True);
+        Assert.That(((IList)Get(map, "path")).Count, Is.Zero);
+        Assert.That(controller.GetType().GetProperty("MatchRevision").GetValue(controller), Is.EqualTo(revision));
+        Assert.That(enemy.transform.position, Is.EqualTo(originalPosition));
+        // Clicking a reachable square while inspecting an enemy must remain an inspection.
+        var destination = (Component)((Array)Get(map, "tiles")).GetValue(5, 3);
+        map.GetType().GetField("cooldown").SetValue(map, 0f);
+        Tap(Camera.main.WorldToScreenPoint(destination.transform.position));
+        Assert.That(Get(map, "selected_tile"), Is.EqualTo(destination.gameObject));
+        Assert.That(Get(map, "is_unit_selected"), Is.False);
+        Assert.That(Get(enemy, "current_tile"), Is.SameAs(origin));
+        Assert.That(controller.GetType().GetProperty("MatchRevision").GetValue(controller), Is.EqualTo(revision));
+    }
     [UnityTest] public IEnumerator TouchDragPansWithoutSelectingTileOrMutatingMatch()
     {
         yield return Game(); var controller = Find("scr_game_contoller"); var tile = FindUsableTile(controller);

@@ -27,9 +27,12 @@ public class PreviewTile : MonoBehaviour
     public TextMeshProUGUI unit_attack_text;
     public TextMeshProUGUI unit_mv_text;
     public TextMeshProUGUI unit_rg_text;
+    public TerrainDefenseDisplay terrainDefense;
 
     public void Set(Tile tile)
     {
+        if (terrainDefense == null) terrainDefense = GetComponentInChildren<TerrainDefenseDisplay>(true);
+        if (terrainDefense != null) terrainDefense.SetStars(tile == null ? 0 : tile.DefenseStars);
         if (tile != null)
         {
             tile_name = tile.tile_name;
@@ -105,8 +108,10 @@ public class PreviewTile : MonoBehaviour
             else
             {
                 unit_info.gameObject.SetActive(false);
-                bg.rectTransform.localPosition = Vector3.zero;
-                bg.rectTransform.sizeDelta = new Vector2(408, 150);
+                // Keep the panel's top edge and existing controls fixed, with room
+                // below the terrain/team text for the three defense shields.
+                bg.rectTransform.localPosition = new Vector3(0, terrainDefense == null ? 0 : -12, 0);
+                bg.rectTransform.sizeDelta = new Vector2(408, terrainDefense == null ? 150 : 174);
             }
 
             tile_name_text.text = tile_name;

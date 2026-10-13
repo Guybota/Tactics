@@ -180,6 +180,7 @@ public class MatchActionIntegrationTests
         Assert.That(Submit(MatchAction.EndTurn(0), out error), Is.False);
         var visual = Presentation.transform.Find("Attack presentation");
         var renderers = visual.GetComponentsInChildren<SpriteRenderer>();
+        var healthCanvas = ((GameObject)Get(actor, "health_bar")).GetComponentInChildren<Canvas>();
         bool changed = false, counter = false, hurt = false;
         var first = renderers[0].sprite;
         float deadline = Time.realtimeSinceStartup + 5;
@@ -189,6 +190,8 @@ public class MatchActionIntegrationTests
             hurt |= Presentation.GetComponentsInChildren<Animator>().Any(a => a.GetCurrentAnimatorStateInfo(0).IsName("Hurt"));
             changed |= renderers[0].sprite != first;
             Assert.That(renderers[1].sprite.rect, Is.EqualTo(renderers[0].sprite.rect));
+            Assert.That(healthCanvas.sortingOrder, Is.GreaterThan(renderers.Max(r => r.sortingOrder)),
+                "Clearing selection must not put the heart underneath a combat copy.");
             Assert.That(renderers.Single(r => r.name == tint.name).color, Is.EqualTo(teamColor));
             yield return null;
         }

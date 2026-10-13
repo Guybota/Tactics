@@ -220,8 +220,14 @@ public class MatchRegressionTests
         return soldier;
     }
     [UnityTest]
-    public IEnumerator MovementPreviewUsesPixelSpritesAboveUnitsAndClearsOnCancel()
+    public IEnumerator SelectedUnitStaysAbovePixelMovementPreviewAndRestoresSortingOnCancel()
     {
+        var unit = King(0);
+        var unitSprite = (SpriteRenderer)Get(unit, "sprite");
+        var unitColor = (SpriteRenderer)Get(unit, "color");
+        var healthCanvas = ((GameObject)Get(unit, "health_bar")).GetComponentInChildren<Canvas>();
+        int originalHealthOrder = healthCanvas.sortingOrder;
+        int originalBody = unitSprite.sortingOrder, originalColor = unitColor.sortingOrder;
         SetUpCorridor();
         Set(Map, "hover_tile", ((Component)TileAt(4, 2)).gameObject);
         Call(Map, "Draw_path_line");
@@ -231,18 +237,47 @@ public class MatchRegressionTests
         foreach (var renderer in visual.GetComponentsInChildren<SpriteRenderer>())
             if (renderer.name.StartsWith("Path segment ")) parts.Add(renderer);
         Assert.That(parts.Count, Is.EqualTo(3));
-        var unitSprite = ((Component)King(0)).GetComponentInChildren<SpriteRenderer>();
+        var unselected = (SpriteRenderer)Get(King(1), "sprite");
         foreach (var part in parts)
         {
             Assert.That(part.sprite.texture.filterMode, Is.EqualTo(FilterMode.Point));
             Assert.That(part.sortingLayerID, Is.EqualTo(unitSprite.sortingLayerID));
-            Assert.That(part.sortingOrder, Is.GreaterThan(unitSprite.sortingOrder));
+            Assert.That(unitSprite.sortingOrder, Is.GreaterThan(part.sortingOrder));
+            Assert.That(unitColor.sortingOrder, Is.GreaterThan(part.sortingOrder));
+            Assert.That(part.sortingOrder, Is.GreaterThan(unselected.sortingOrder));
         }
+        Assert.That(unitColor.sortingOrder - unitSprite.sortingOrder, Is.EqualTo(originalColor - originalBody));
         Assert.That(((LineRenderer)Get(Map, "line")).enabled, Is.False);
         Assert.That(((LineRenderer)Get(Map, "arrow")).enabled, Is.False);
         Assert.That(((IList)Get(Map, "path")).Count, Is.Zero);
+        yield return null;
+        Assert.That(healthCanvas.sortingLayerID, Is.EqualTo(unitSprite.sortingLayerID));
+        Assert.That(healthCanvas.sortingOrder, Is.GreaterThan(Mathf.Max(unitSprite.sortingOrder, unitColor.sortingOrder)),
+            "The heart and life must remain above the selected character.");
         Call(Map, "ResetInteraction");
         foreach (var part in parts) Assert.That(part.gameObject.activeSelf, Is.False);
+        Assert.That(unitSprite.sortingOrder, Is.EqualTo(originalBody));
+        Assert.That(unitColor.sortingOrder, Is.EqualTo(originalColor));
+        yield return null;
+        Assert.That(healthCanvas.sortingOrder, Is.EqualTo(originalHealthOrder));
+    }
+
+    [UnityTest]
+    public IEnumerator SelectingAnotherUnitRestoresThePreviousUnitSorting()
+    {
+        var first = (SpriteRenderer)Get(King(0), "sprite");
+        var second = (SpriteRenderer)Get(King(1), "sprite");
+        int firstOrder = first.sortingOrder, secondOrder = second.sortingOrder;
+        Call(Map, "Select_tile", Get(King(0), "current_tile"), Teams[0]);
+        Assert.That(first.sortingOrder, Is.GreaterThan(firstOrder));
+        // Reset the unconfirmed selection, then inspect an enemy that has already acted.
+        Call(Map, "ResetInteraction");
+        Set(King(1), "has_moved", true);
+        Call(Map, "Select_tile", Get(King(1), "current_tile"), Teams[0]);
+        Assert.That(first.sortingOrder, Is.EqualTo(firstOrder));
+        Assert.That(second.sortingOrder, Is.GreaterThan(secondOrder));
+        Call(Map, "ResetInteraction");
+        Assert.That(second.sortingOrder, Is.EqualTo(secondOrder));
         yield return null;
     }
 
@@ -432,10 +467,23 @@ public class MatchRegressionTests
     public IEnumerator LeaderCanMoveBeforeBuildingAndCommitsMovementWithTheAction()
     {
         object buildTile = PrepareBuildTile();
+        Set(Map, "hover_tile", ((Component)TileAt(4, 2)).gameObject);
+        Call(Map, "Draw_path_line");
+        var visual = (Component)Get(Map, "movementPath");
+        var arrowParts = new List<SpriteRenderer>();
+        foreach (var renderer in visual.GetComponentsInChildren<SpriteRenderer>())
+            if (renderer.name.StartsWith("Path segment ")) arrowParts.Add(renderer);
+        Assert.That(arrowParts.Count, Is.GreaterThan(0), "The fixture must show a movement arrow before construction.");
         Call(Map, "Select_tile", TileAt(4, 2), Teams[0]);
         Call(King(0), "StopMovement");
         Assert.That(((IList)Get(Map, "path")).Count, Is.GreaterThan(0));
         Call(Map, "Start_build");
+        foreach (var part in arrowParts) Assert.That(part.gameObject.activeSelf, Is.False);
+        Assert.That(((IList)Get(Map, "points")).Count, Is.Zero);
+        // Mouse hover must not recreate the movement arrow while choosing a castle site.
+        Call(Map, "Draw_path_line");
+        foreach (var part in arrowParts) Assert.That(part.gameObject.activeSelf, Is.False);
+        Assert.That(((IList)Get(Map, "path")).Count, Is.GreaterThan(0), "Hiding the arrow must preserve the leader's planned movement.");
         Assert.That(Get(buildTile, "can_build"), Is.EqualTo("can_build"));
         Call(Map, "Finalize_build", buildTile);
         Assert.That(Get(King(0), "current_tile"), Is.SameAs(TileAt(4, 2)));

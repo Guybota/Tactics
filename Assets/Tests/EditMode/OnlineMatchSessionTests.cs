@@ -13,13 +13,14 @@ public class OnlineMatchSessionTests
         private readonly string playerId;
         public readonly List<MatchCommand> Commands = new List<MatchCommand>();
         public Func<MatchCommand, Task<MatchTransportReply>> SubmitOverride;
+        public Func<MatchTransportReply> ReadOverride;
         public bool LoseNextReply;
 
         public AuthenticatedTransport(AuthoritativeMatch authority, string playerId)
         { this.authority = authority; this.playerId = playerId; }
 
         public Task<MatchTransportReply> ReadAsync(string matchId)
-            => Task.FromResult(Wire(authority.Snapshot(playerId)));
+            => Task.FromResult(ReadOverride != null ? ReadOverride() : Wire(authority.Snapshot(playerId)));
 
         public Task<MatchTransportReply> SubmitAsync(MatchCommand command)
         {
@@ -188,5 +189,84 @@ public class OnlineMatchSessionTests
         var decoded = JsonUtility.FromJson<MatchTransportReply>(json);
         Assert.That(decoded.Snapshot.ToState().Players[0].Money, Is.EqualTo(5000));
         Assert.That(authority.Snapshot("alice").State.RandomState, Is.EqualTo(12345));
+    }
+
+    private static MatchSnapshotData ChangedIdentity(MatchSnapshotData original, string fault)
+    {
+        var state = original.ToState();
+        if (fault == "width" || fault == "height")
+        {
+            var resized = new MatchState(fault == "width" ? 7 : 8, fault == "height" ? 7 : 8);
+            foreach (var player in state.Players) resized.Players.Add(player.Clone());
+            state = resized;
+        }
+        if (fault == "players")
+        {
+            var third = state.Players[0].Clone(); third.Units[0].Position = new GridPosition(1, 6); state.Players.Add(third);
+        }
+        if (fault == "race") state.Players[0].RaceId = "different-race";
+        if (fault == "unit-type") state.Players[0].Units[0].TypeId = "different-unit";
+        if (fault == "terrain")
+        {
+            state.Cells[3, 3].Terrain = TerrainKind.Forest; state.Cells[3, 3].MovementCost = 2; state.Cells[3, 3].SupportsCastle = false;
+        }
+        if (fault == "rules") state.BuildMode = !state.BuildMode;
+        return MatchSnapshotData.FromState(state);
+    }
+
+    [TestCase("width")] [TestCase("height")] [TestCase("players")] [TestCase("race")]
+    [TestCase("unit-type")] [TestCase("terrain")] [TestCase("rules")]
+    public async Task ImmutableIdentityChangeAfterCommitKeepsPendingAndCanRecoverSameCommand(string fault)
+    {
+        var transport = new AuthenticatedTransport(authority, "alice");
+        transport.SubmitOverride = command =>
+        {
+            var reply = transport.Commit(command); reply.Snapshot = ChangedIdentity(reply.Snapshot, fault); return Task.FromResult(reply);
+        };
+        var session = new OnlineMatchSession(transport, "match", initial);
+        Assert.That((await session.SubmitAsync(MatchAction.EndTurn(0), 0)).Success, Is.False);
+        Assert.That(session.HasPendingCommand, Is.True); Assert.That(session.Revision, Is.Zero);
+        Assert.That(JsonUtility.ToJson(MatchSnapshotData.FromState(session.Snapshot())), Is.EqualTo(JsonUtility.ToJson(initial)));
+        transport.SubmitOverride = null;
+        Assert.That((await session.RetryPendingAsync()).Success, Is.True);
+        Assert.That(transport.Commands[1].CommandId, Is.EqualTo(transport.Commands[0].CommandId));
+        Assert.That(session.HasPendingCommand, Is.False); Assert.That(session.Revision, Is.EqualTo(1));
+        Assert.That(authority.Snapshot("alice").Revision, Is.EqualTo(1));
+    }
+
+    [TestCase("width")] [TestCase("height")] [TestCase("players")] [TestCase("race")]
+    [TestCase("unit-type")] [TestCase("terrain")] [TestCase("rules")]
+    public async Task ImmutableIdentityChangeOnRefreshPreservesConfirmedSnapshotAndRevision(string fault)
+    {
+        var transport = new AuthenticatedTransport(authority, "alice");
+        transport.ReadOverride = () => new MatchTransportReply { MatchId = "match", Success = true, Revision = 1,
+            Snapshot = ChangedIdentity(initial, fault) };
+        var session = new OnlineMatchSession(transport, "match", initial);
+        Assert.That((await session.RefreshAsync()).Success, Is.False);
+        Assert.That(session.Revision, Is.Zero); Assert.That(session.HasPendingCommand, Is.False);
+        Assert.That(JsonUtility.ToJson(MatchSnapshotData.FromState(session.Snapshot())), Is.EqualTo(JsonUtility.ToJson(initial)));
+    }
+
+    [Test]
+    public async Task ImmutableChecksAllowRecruitmentAndDynamicCastleStormAndUnitState()
+    {
+        var content = new MatchContent(); content.AddUnit(new UnitTypeStats("leader", 20, 5, 4, 1, 1000));
+        content.AddRace("race", new[] { "leader" }); content.SetDamage("leader", "leader", 55);
+        var state = initial.ToState(); state.Cells[2, 2].HasCastle = true; state.Cells[2, 2].CastleOwner = 0;
+        var server = new AuthoritativeMatch("match", new MatchEngine(content), state,
+            new Dictionary<string, int> { { "alice", 0 }, { "bob", 1 } });
+        var transport = new AuthenticatedTransport(server, "alice");
+        var session = new OnlineMatchSession(transport, "match", MatchSnapshotData.FromState(state));
+        Assert.That((await session.SubmitAsync(MatchAction.Recruit(0, new GridPosition(2, 2), "leader"), 0)).Success, Is.True);
+        Assert.That(session.Snapshot().Players[0].Units.Count, Is.EqualTo(2));
+        var dynamicState = session.Snapshot();
+        var recruited = dynamicState.Players[0].Units[1]; recruited.Health = 0; recruited.IsDead = true;
+        dynamicState.Cells[2, 2].HasCastle = false; dynamicState.Cells[2, 2].CastleOwner = -1; dynamicState.Cells[2, 2].HasStorm = true;
+        transport.ReadOverride = () => new MatchTransportReply { MatchId = "match", Success = true, Revision = 2,
+            Snapshot = MatchSnapshotData.FromState(dynamicState) };
+        Assert.That((await session.RefreshAsync()).Success, Is.True);
+        Assert.That(session.Revision, Is.EqualTo(2));
+        Assert.That(session.Snapshot().Players[0].Units[1].IsDead, Is.True);
+        Assert.That(session.Snapshot().Cells[2, 2].HasStorm, Is.True);
     }
 }

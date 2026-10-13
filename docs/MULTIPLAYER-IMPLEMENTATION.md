@@ -16,12 +16,32 @@
   without a caller-provided authenticated identity.
 - `MatchInitializer`: creates a 2–4-player match without Unity objects and applies opening
   income and leader bonuses once.
+- `DurableMatchService`: creates private 1v1 invitations, joins and initializes once, checks
+  authenticated seats, and commits state/revision/compact command receipts using storage CAS.
+- `CloudSaveMatchStore`: stores one private record per match and uses the exact Cloud Save
+  write lock for updates. The Cloud Code module supplies authenticated identity from context.
+- `UgsMatchTransport` / `UgsCloudModuleClient`: SDK-backed calls to the five module endpoints;
+  authentication and service initialization happen only on explicit online operations.
+- `OnlineSessionFileJournal`: atomically saves public recovery state and the exact pending
+  command before network submission, scoped to project, environment, account and match.
 - The Unity controller executes its local actions through `LocalMatchSession`. The explicit
   local scene bridge preserves existing saves, bot integration and legacy component edits.
+- `OnlineMatchMenu`: private create/join/resume flow with army selection, optional castle
+  building/storm, copyable invitation and an explicit open-board action.
+- `OnlineMatchRuntime`: passes the confirmed session and authenticated player slot to the
+  match scene. Online projection checks the local catalogue digest against the server version.
+- Online controller projection builds the server terrain/participants and applies only
+  confirmed snapshots. Human actions await server replies; only the authenticated slot's
+  turn is controllable. Bots, local turn initialization and local save replacement are blocked.
+- An online HUD offers refresh, retry of the same pending command and invitation copying.
+  The board polls every five seconds while active, backs off on failure, and pauses automatic
+  polling during menus, pending actions, combat animations and blocked input.
 
 The scene bridge is temporary: `LocalSession` imports local component data before reading or
-executing actions. A remote session must never import this data. The online session is not
-yet connected to the Unity scene or menus.
+executing actions. A remote session must never import this data. The SDK transport and
+recovery connector and online scene/menu integration are implemented. Opening the Online
+menu itself does not initialize services or make network calls. A waiting lobby polls only
+while its panel is visible, with five-second intervals and up to thirty seconds after errors.
 
 ## Export the current game catalogue
 
@@ -50,23 +70,102 @@ Its transport runs inside one process; it is not a test of real internet connect
 Unity EditMode tests cover the contracts, authority, online session and export of the real
 catalogue. PlayMode tests verify the local scene integration, revisions and save reloads.
 
+## Backend verification and deployment package
+
+`Server/Tactics.Multiplayer.Backend` contains the storage-independent coordinator and a
+local file provider. `Server/Tactics.Multiplayer.CloudCode` contains the deployable C# module
+and its actual SDK adapter. See their READMEs for detailed build and storage semantics.
+
+```powershell
+dotnet run --project Tools/PersistentMultiplayerSmoke/PersistentMultiplayerSmoke.csproj
+dotnet run --project Server/Tactics.Multiplayer.CloudCode/Tests/CloudCodeSmoke.csproj --no-restore
+& ./Server/Tactics.Multiplayer.CloudCode/Package.ps1
+```
+
+The package command creates a Linux-compatible `.ccm` archive under a fresh local build
+directory, with the real catalogue and `default-1v1` map embedded. It does not publish it.
+SDK packages are pinned: Unity Authentication 3.8.0, Unity Cloud Code 2.10.4; server SDK
+CloudCode.Core 0.0.7 and CloudCode.Apis 0.0.27. No billing settings have been changed.
+
+The module exposes `CreateMatch`, `JoinMatch`, `GetLobby`, `GetMatch` and `SubmitAction`.
+`UgsMatchConnector.OpenAsync` restores the account-scoped journal, refreshes confirmed state,
+and retries an uncertain action using its original command ID. It leaves unknown actions
+recoverable when storage or network confirmation fails.
+
 ## Next implementation boundary
 
-1. Implement the Cloud Code authentication boundary and `IMatchTransport` provider.
-2. Persist state, revision, catalogue/map versions and command receipts atomically in Cloud
-   Save using storage write locks. A C# lock is insufficient across Cloud Code instances.
-3. Persist pending client commands across process restarts, so a timeout followed by closing
-   the app can resume using the same command ID.
-4. Implement durable match creation, invitations, participant readiness and player match lists.
-5. Bind the Unity scene to online confirmed state; adapt UI callers to asynchronous completion
-   rather than treating a queued request as an accepted action.
-6. Add create/join/resume UI and test two independent builds against a development backend.
+1. Add persistent player match lists, readiness and lobby cleanup. This increment resumes
+   the last invitation scoped to project/environment/account, or reopens another by invitation.
+2. Add creation request idempotency, account linking and explicit content-version retention
+   before a public beta. Joining currently starts the two-player match immediately.
 
-The private-state DTO assumes a complete trusted record. The future storage reader must
-check required JSON fields, including `RandomState`, before decoding: a missing field must
-not be interpreted as a genuine zero random state.
+The private-state reader verifies required fields, including `RandomState`, and rejects
+duplicate JSON keys. A missing RNG field is not interpreted as a genuine zero random state.
 
-No Unity services were installed or deployed by this increment. `AuthoritativeMatch` stores
-receipts in memory and refuses new commands at its explicit capacity instead of evicting
-receipts. It is a verification implementation, not durable production storage. Server-only
-results contain RNG and must be converted to public snapshot DTOs before transmission.
+`AuthoritativeMatch` remains an in-memory verification implementation. The durable backend
+has a 4096-receipt/4-MiB raw-record bound and refuses excess commands instead of deleting
+receipts. Cloud Save creation relies on server-generated UUID uniqueness plus an absence
+check; it does not provide a documented atomic create-if-absent operation. Updates use CAS.
+The SDK/module unit tests use a fake cloud service; local file tests verify persistence and
+concurrency. Live UGS checks now complement those tests.
+
+Verified for this increment: 77 multiplayer EditMode cases, 26 local action/save/bot
+PlayMode cases, 33 persistent-backend assertions, 20 official-SDK adapter/module assertions,
+and successful server builds without warnings or errors.
+
+## Development deployment and live verification — 2026-10-13
+
+`TacticsMultiplayer` is published in the project's new **development** environment.
+The existing production environment and billing configuration were not changed.
+Public configuration, archive digest and test match identifiers are recorded in
+[`Server/Deployment/development.json`](../Server/Deployment/development.json).
+
+The standalone `Tools/UgsLiveSmoke` verifier passed **43 assertions using 20 HTTP
+requests** against real Authentication, Cloud Code and private Cloud Save storage.
+It exercised two authenticated players, access isolation, stale/spoofed actions,
+concurrent writes, duplicate requests and retry from a new HTTP client.
+
+An additional check ran in Unity Play Mode through the actual `UgsCloudModuleClient`,
+`UgsMatchTransport`, `OnlineMatchSession`, `OnlineSessionFileJournal` and
+`UgsMatchConnector`. It created and joined a real match, simulated response loss
+after a committed action, restored the pending command from disk, retried it once,
+exchanged both players' turns, and reopened the confirmed session. The final state
+was revision **4**, turn **2**, with no pending command.
+
+To repeat the checks explicitly, see `Tools/UgsLiveSmoke/README.md` and
+`Assets/Editor/MultiplayerDeployment/README.md`. They create development test
+accounts/matches and incur ordinary UGS usage. Nothing runs automatically.
+## Playable private 1v1 flow — 2026-10-13
+
+1. On the main menu, choose **Online**, select an army and **Create match**.
+2. Use **Copy invitation** and pass it to the other player. In their Online menu,
+   they paste it and choose **Join**. Use separate computers or browser profiles;
+   two instances sharing the same cached anonymous identity are the same player.
+3. Each player chooses **Open match** when the lobby is active. Only the player's own
+   turn accepts actions; opponent changes appear through the board's refresh/polling.
+4. After returning to the main menu or restarting, choose **Resume last match**.
+   If an action's reply was lost, the exact pending command is preserved on disk;
+   use **Retry** on the board or reopen the match to resolve it safely.
+
+This flow uses **development**, the server's `default-1v1` map and the anonymous
+UGS profile cached on that installation. Account linking and a complete match list
+remain future work. Losing that anonymous profile loses its access to existing matches.
+Local save/load cannot replace or export an online game; online progress is automatic.
+Creation does not yet have an idempotency key, so an ambiguous creation retry can
+allocate a second waiting lobby. Action retries are idempotent.
+
+Verified for this scene/menu increment: **41 EditMode tests** and **37 PlayMode tests**
+passed. They cover immutable match identity, recovery, delayed/rejected actions,
+ownership, confirmed attack presentation, menu entry/back/input/layout and existing
+local action/save/bot behavior. These targeted suites are separate from the live checks.
+
+The live board check reopened the earlier SDK match through the scene handoff, submitted
+a turn and checked the persisted server response at revision **5**, turn **3**. The full
+menu check created a new lobby via the real UI operation, resumed its saved invitation,
+joined a second authenticated guest, refreshed/opened through the menu and submitted
+a board turn. The resulting server state was revision **2**, turn **1**. Both checks passed
+against development. Screenshots were inspected for menu layout and HUD overlap.
+
+The client now rejects replies changing the map size, participant races, immutable
+terrain/rules or existing unit identities before persisting them. Dynamic recruits,
+deaths, castle ownership and storm flags remain valid confirmed changes.

@@ -14,6 +14,6 @@ public sealed class TouchMatchControls : MonoBehaviour
             foreach (var root in new[] { controller.uiManager.buttons, controller.uiManager.main_menu })
                 foreach (var button in root.GetComponentsInChildren<Button>(true))
                     for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
-                        if (button.onClick.GetPersistentMethodName(i) == "Finalize_turn") button.interactable = !controller.IsBotTurn && !controller.IsCombatAnimating && controller.status != "Over";
+                        if (button.onClick.GetPersistentMethodName(i) == "Finalize_turn") button.interactable = !controller.IsBotTurn && !controller.IsCombatAnimating && controller.status != "Over" && (!controller.IsOnlineMatch || controller.CanControlOnlineTurn);
     }
 }

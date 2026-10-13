@@ -30,6 +30,9 @@ public class Map : MonoBehaviour
     public scr_camera game_camera;
     private Team current_team;
     private MovementResult selectedMovement;
+    private Unit selectedRenderUnit;
+    private SpriteRenderer[] raisedRenderers;
+    private int[] originalSortingLayers, originalSortingOrders;
     public float cooldown = 0;
     // Runtime settings: legacy scene serialization must not replace the defaults with zero.
     public int stormWarmupRounds { get; set; } = 1;
@@ -41,6 +44,53 @@ public class Map : MonoBehaviour
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
+    private void LateUpdate() => UpdateSelectedUnitSorting();
+    private void OnDisable() => RestoreSelectedUnitSorting();
+
+    private void RestoreSelectedUnitSorting()
+    {
+        if (raisedRenderers != null)
+            for (int i = 0; i < raisedRenderers.Length; i++)
+                if (raisedRenderers[i] != null)
+                {
+                    raisedRenderers[i].sortingLayerID = originalSortingLayers[i];
+                    raisedRenderers[i].sortingOrder = originalSortingOrders[i];
+                }
+        selectedRenderUnit = null;
+        raisedRenderers = null;
+    }
+
+    private void UpdateSelectedUnitSorting()
+    {
+        Unit selected = selected_tile != null && selected_tile.GetComponent<Tile>().unit != null
+            ? selected_tile.GetComponent<Tile>().unit.GetComponent<Unit>() : null;
+        if (selected == selectedRenderUnit) return;
+        RestoreSelectedUnitSorting();
+        if (selected == null || selected.has_died) return;
+        var template = movementPath != null ? movementPath.segmentTemplate : null;
+        int pathOrder = template != null ? template.sortingOrder : line != null ? line.sortingOrder : 30;
+        int pathLayer = template != null ? template.sortingLayerID : line != null ? line.sortingLayerID : 0;
+        raisedRenderers = new[] { selected.sprite, selected.color };
+        originalSortingLayers = new int[2]; originalSortingOrders = new int[2];
+        int minimum = int.MaxValue;
+        for (int i = 0; i < raisedRenderers.Length; i++)
+        {
+            var renderer = raisedRenderers[i];
+            if (renderer == null) continue;
+            originalSortingLayers[i] = renderer.sortingLayerID;
+            originalSortingOrders[i] = renderer.sortingOrder;
+            minimum = Mathf.Min(minimum, renderer.sortingOrder);
+        }
+        int offset = minimum == int.MaxValue ? 0 : Mathf.Max(0, pathOrder + 1 - minimum);
+        foreach (var renderer in raisedRenderers)
+            if (renderer != null)
+            {
+                renderer.sortingLayerID = pathLayer;
+                renderer.sortingOrder += offset;
+            }
+        selectedRenderUnit = selected;
     }
 
     
@@ -227,7 +277,7 @@ public class Map : MonoBehaviour
         Unit unit = Get_selected_unit();
         if (unit.IsMoving) return;
         Tile destination = path.Count > 0 ? path[^1] : unit.current_tile;
-        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.Wait, g_controller.GetUnitKey(unit), PositionOf(destination)), out _);
+        g_controller.DispatchAction(new MatchAction(MatchActionKind.Wait, g_controller.GetUnitKey(unit), PositionOf(destination)));
     }
 
     public void ResetInteraction()
@@ -282,8 +332,8 @@ public class Map : MonoBehaviour
         if (attacker.IsMoving || attacker.has_died || attacker.target_attack_tile == null || attacker.target_attack_tile.unit == null) return;
         Unit defender = attacker.target_attack_tile.unit.GetComponent<Unit>();
         Tile destination = path.Count > 0 ? path[^1] : Get_selected_tile();
-        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.Attack, g_controller.GetUnitKey(attacker),
-            PositionOf(destination), g_controller.GetUnitKey(defender)), out _);
+        g_controller.DispatchAction(new MatchAction(MatchActionKind.Attack, g_controller.GetUnitKey(attacker),
+            PositionOf(destination), g_controller.GetUnitKey(defender)));
     }
 
     public void Handle_capture()
@@ -291,7 +341,7 @@ public class Map : MonoBehaviour
         Unit unit = Get_selected_unit();
         if (unit.IsMoving || unit.has_died) return;
         Tile destination = path.Count > 0 ? path[^1] : Get_selected_tile();
-        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.Capture, g_controller.GetUnitKey(unit), PositionOf(destination)), out _);
+        g_controller.DispatchAction(new MatchAction(MatchActionKind.Capture, g_controller.GetUnitKey(unit), PositionOf(destination)));
     }
 
     public bool Handle_spawn(string option)
@@ -302,6 +352,15 @@ public class Map : MonoBehaviour
         if (prefab == null) return false;
         return g_controller.TryExecuteAction(MatchAction.Recruit(teams.IndexOf(current_team), PositionOf(tile),
             UnityMatchAdapter.TypeId(prefab.GetComponent<Unit>())), out _);
+    }
+
+    public System.Threading.Tasks.Task<bool> Handle_spawnAsync(string option)
+    {
+        if (selected_tile == null || current_team == null || current_team.has_lost) return System.Threading.Tasks.Task.FromResult(false);
+        var prefab = current_team.raceClass.AvailableUnits.Find(p => p.GetComponent<Unit>().unit_name == option);
+        if (prefab == null) return System.Threading.Tasks.Task.FromResult(false);
+        return g_controller.ExecuteActionAsync(MatchAction.Recruit(teams.IndexOf(current_team), PositionOf(Get_selected_tile()),
+            UnityMatchAdapter.TypeId(prefab.GetComponent<Unit>())));
     }
 
     public void Cancel_castle()
@@ -330,6 +389,7 @@ public class Map : MonoBehaviour
         cooldown = .2f;
         uiManager.action_menu.SetActive(false);
         Clear_board();
+        Clear_line();
         var unit = Get_selected_unit();
         var destination = path.Count > 0 ? path[^1] : unit.current_tile;
         var buildTargets = g_controller.GetBuildTargets(unit, destination);
@@ -365,8 +425,8 @@ public class Map : MonoBehaviour
         if (!is_building || !CanBuildOn(tile)) return;
         Unit unit = Get_selected_unit();
         var destination = path.Count > 0 ? path[^1] : unit.current_tile;
-        g_controller.TryExecuteAction(new MatchAction(MatchActionKind.BuildCastle, g_controller.GetUnitKey(unit),
-            PositionOf(destination), target: PositionOf(tile)), out _);
+        g_controller.DispatchAction(new MatchAction(MatchActionKind.BuildCastle, g_controller.GetUnitKey(unit),
+            PositionOf(destination), target: PositionOf(tile)));
     }
 
     public void ChangeTile(Tile tile, string option)
@@ -466,7 +526,12 @@ public class Map : MonoBehaviour
         selected_tile = tile.gameObject;
         tile.selected = true;
         tile.Update_overlay("selected");
-        is_unit_selected = tile.unit != null && !tile.unit.GetComponent<Unit>().has_moved;
+        var inspected = tile.unit != null ? tile.unit.GetComponent<Unit>() : null;
+        // An enemy's spent action belongs to its own turn. Inspection still shows
+        // its movement/threat range on tap or click without granting control.
+        is_unit_selected = inspected != null && !inspected.has_died
+            && (inspected.team != current_team || !inspected.has_moved);
+        UpdateSelectedUnitSorting();
         if (is_unit_selected)
         {
             audioManager.PlaySFX(audioManager.select);
@@ -622,7 +687,7 @@ public class Map : MonoBehaviour
     public void Draw_path_line()
     {
         Clear_line();
-        if (movementPath == null || hover_tile == null || selected_tile == null || !is_unit_selected || selectedMovement == null ||
+        if (is_building || movementPath == null || hover_tile == null || selected_tile == null || !is_unit_selected || selectedMovement == null ||
             !current_team.Is_in_team(Get_selected_unit()) || Get_selected_unit().has_moved) return;
         if (!TryPlanPath(hover_tile.GetComponent<Tile>(), selectedMovement, out List<Tile> preview)) return;
         for (int i = 0; i < preview.Count; i++)
@@ -705,6 +770,7 @@ public class Map : MonoBehaviour
 
     public void Clear_board()
     {
+        RestoreSelectedUnitSorting();
         for (int i = 0; i < max_x; i++)
         {
             for (int j = 0; j < max_y; j++)

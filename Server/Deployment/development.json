@@ -1,0 +1,45 @@
+{
+  "projectId": "a5e13aaf-bbbb-44ff-965e-fc9773bbada6",
+  "environmentName": "development",
+  "environmentId": "6e2fd039-7abd-412b-aa01-7f100a0b5001",
+  "moduleName": "TacticsMultiplayer",
+  "verifiedDate": "2026-10-13",
+  "archivePath": "Server/Tactics.Multiplayer.CloudCode/artifacts/2f331c691ec74aadb696af2ad68f6433/TacticsMultiplayer.ccm",
+  "archiveSha256": "dd03935f44226cf3e5cb9fa8f319678db93e82e6a133d85fa42f383670f9ceb0",
+  "endpoints": ["CreateMatch", "JoinMatch", "GetLobby", "GetMatch", "SubmitAction"],
+  "headlessLiveSmoke": {
+    "passed": true,
+    "assertions": 43,
+    "httpRequests": 20,
+    "matchId": "9fef836eb0504ea7a43e7090aaad2463"
+  },
+  "unityRuntimeLiveSmoke": {
+    "passed": true,
+    "matchId": "3ad220a31a0b4170a1cab160d6b7efa4",
+    "finalRevision": 4,
+    "finalTurn": 2,
+    "diskJournal": true,
+    "duplicateRetry": true,
+    "connectorRecovery": true
+  },
+  "unityBoardLiveSmoke": {
+    "passed": true,
+    "matchId": "3ad220a31a0b4170a1cab160d6b7efa4",
+    "finalRevision": 5,
+    "finalTurn": 3,
+    "sceneHandoff": true,
+    "confirmedProjection": true,
+    "actionSubmitted": true
+  },
+  "unityMenuLiveSmoke": {
+    "passed": true,
+    "matchId": "4532ee906ea34a9abf3c68dfadfaadd9",
+    "finalRevision": 2,
+    "finalTurn": 1,
+    "menuCreation": true,
+    "menuResume": true,
+    "guestJoin": true,
+    "menuOpen": true,
+    "boardAction": true
+  }
+}

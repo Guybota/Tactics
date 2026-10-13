@@ -1,0 +1,522 @@
+{
+  "schemaVersion": 1,
+  "id": "01000000000000000000000000000001",
+  "name": "Clareira",
+  "width": 10,
+  "height": 10,
+  "playerCount": 2,
+  "cells": [
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": true,
+      "castleOwner": 0
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 1,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 1,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": true,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": true,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 1,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 1,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": true,
+      "castleOwner": 1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    },
+    {
+      "terrain": 0,
+      "castle": false,
+      "castleOwner": -1
+    }
+  ],
+  "starts": [
+    {
+      "slot": 0,
+      "x": 1,
+      "y": 2
+    },
+    {
+      "slot": 1,
+      "x": 8,
+      "y": 7
+    }
+  ]
+}

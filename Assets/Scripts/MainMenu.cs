@@ -45,6 +45,8 @@ public class MainMenu : MonoBehaviour
     private static CustomMapData pendingEditorMap;
     public static CustomMapData SelectedCustomMap => selectedCustomMap?.Clone();
     private CustomMapSelect customMapSelect;
+    private OnlineMatchMenu onlineMenu;
+    public OnlineMatchMenu OnlineMenu => onlineMenu;
     internal static GameSave TakePendingSave() { var save = pendingSave; pendingSave = null; return save; }
     internal static CustomMapData TakePendingEditorMap() { var map = pendingEditorMap; pendingEditorMap = null; return map; }
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -117,6 +119,15 @@ public class MainMenu : MonoBehaviour
         mapMenu.SetActive(false);
         createmapMenu.SetActive(false);
         customMapSelect = GetComponent<CustomMapSelect>(); customMapSelect.Initialize(this);
+        onlineMenu = GetComponent<OnlineMatchMenu>() ?? gameObject.AddComponent<OnlineMatchMenu>();
+        onlineMenu.Initialize(this);
+    }
+
+    public void PressOnline()
+    {
+        HideExtraMenus();
+        firstMenu.SetActive(false); mapMenu.SetActive(false); createmapMenu.SetActive(false);
+        onlineMenu.Show();
     }
 
     public void PressPlay()
@@ -141,6 +152,7 @@ public class MainMenu : MonoBehaviour
 
     public void PressLoad()
     {
+        onlineMenu?.Hide();
         firstMenu.SetActive(false);
         mapMenu.SetActive(false); createmapMenu.SetActive(false);
         if (settingsMenu != null) settingsMenu.gameObject.SetActive(false);
@@ -149,12 +161,14 @@ public class MainMenu : MonoBehaviour
 
     public void PressSettings()
     {
+        onlineMenu?.Hide();
         firstMenu.SetActive(false); mapMenu.SetActive(false); createmapMenu.SetActive(false);
         if (loadMenu != null) loadMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(true);
     }
     private void HideExtraMenus()
     {
+        onlineMenu?.Hide();
         if (loadMenu != null) loadMenu.gameObject.SetActive(false);
         if (settingsMenu != null) settingsMenu.gameObject.SetActive(false);
     }
@@ -167,6 +181,7 @@ public class MainMenu : MonoBehaviour
             var races = new Dictionary<string, RaceClass>();
             foreach (var race in classes) races[race.className] = race;
             SaveGameValidator.Validate(save, races);
+            OnlineMatchRuntime.Clear();
             pendingSave = save;
             SceneManager.LoadScene(1);
             return true;
@@ -182,6 +197,7 @@ public class MainMenu : MonoBehaviour
             catch (Exception exception) { customMapSelect.ShowError(exception.Message); return; }
         }
         pendingSave = null;
+        OnlineMatchRuntime.Clear();
         SceneManager.LoadScene(1);
     }
 

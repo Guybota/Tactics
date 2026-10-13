@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>TacticsMultiplayer</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <NuGetAudit>false</NuGetAudit>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove=".sdk/**/*.cs" />
+    <Compile Remove="Tests/**/*.cs" />
+    <Compile Remove="artifacts/**/*.cs" />
+    <PackageReference Include="Com.Unity.Services.CloudCode.Core" Version="0.0.7" />
+    <PackageReference Include="Com.Unity.Services.CloudCode.Apis" Version="0.0.27" />
+    <ProjectReference Include="../Tactics.Multiplayer.Backend/Tactics.Multiplayer.Backend.csproj" />
+    <EmbeddedResource Include="../Content/match-content.json" LogicalName="Tactics.Multiplayer.Content.catalogue.json" />
+    <EmbeddedResource Include="../Content/maps/default.json" LogicalName="Tactics.Multiplayer.Content.default-map.json" />
+  </ItemGroup>
+</Project>

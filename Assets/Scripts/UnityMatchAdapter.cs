@@ -99,6 +99,15 @@ public sealed class UnityMatchAdapter
         for (int x = 0; x < state.Width; x++) for (int y = 0; y < state.Height; y++)
             if (state.Cells[x, y].HasCastle && map.tiles[x, y].castle == null) throw new InvalidOperationException("Tile does not support castles.");
 
+        foreach (var entry in existing)
+            if (state.FindUnit(entry.Key) == null)
+            {
+                entry.Value.StopMovement();
+                controller.teams[entry.Key.Player].Remove(entry.Value);
+                entry.Value.gameObject.SetActive(false);
+                UnityEngine.Object.Destroy(entry.Value.gameObject);
+            }
+
         foreach (var tile in map.tiles) tile.unit = null;
         for (int x = 0; x < state.Width; x++) for (int y = 0; y < state.Height; y++)
         {

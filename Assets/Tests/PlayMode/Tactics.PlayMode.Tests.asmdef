@@ -1,7 +1,9 @@
 {
   "name": "Tactics.PlayMode.Tests",
   "references": [
-    "Tactics.Core"
+    "Tactics.Core",
+    "Unity.TextMeshPro",
+    "Unity.ugui"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

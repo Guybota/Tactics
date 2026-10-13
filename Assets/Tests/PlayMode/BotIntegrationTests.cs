@@ -70,10 +70,10 @@ public class BotIntegrationTests
         for (int p = 0; p < 4; p++) Assert.That(Get(Teams[p], "isBot"), Is.EqualTo(p != 0));
     }
     [UnityTest]
-    public IEnumerator BotAttackWithoutMovementPlaysSound() => VerifyBotAttackSound(3);
+    public IEnumerator BotAttackWithoutMovementPlaysSoundAndFocusesCamera() => VerifyBotAttackSound(3);
 
     [UnityTest]
-    public IEnumerator BotAttackAfterMovementPlaysSound() => VerifyBotAttackSound(4);
+    public IEnumerator BotAttackAfterMovementPlaysSoundAndFollowsItsPresentation() => VerifyBotAttackSound(4);
 
     private IEnumerator VerifyBotAttackSound(int botStartX)
     {
@@ -104,11 +104,29 @@ public class BotIntegrationTests
             var before = State(); var bot = before.Players[1].Units[0]; var human = before.Players[0].Units[0];
             var action = new MatchAction(MatchActionKind.Attack, new UnitKey(1, bot.Id),
                 new GridPosition(3, 2), new UnitKey(0, human.Id));
+            var camera = ((GameObject)Get(controller, "game_camera")).GetComponent(Script("scr_camera"));
+            camera.transform.position = new Vector3(-3000, -3000, -10);
             Runner.GetType().GetMethod("Execute", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(Runner, new object[] { action });
             Assert.That(State().FindUnit(new UnitKey(0, human.Id)).Health, Is.LessThan(human.Health));
             Assert.That(source.isPlaying, Is.True, "A confirmed bot attack must reach the SFX source.");
             Assert.That(Runner.GetType().GetProperty("IsAnimating").GetValue(Runner), Is.EqualTo(botStartX != 3));
-            yield return null;
+            var presentation = controller.GetComponent(Script("CombatPresentation"));
+            var actorVisual = presentation.transform.Find("Attack presentation");
+            Assert.That(Get(camera, "is_following"), Is.True);
+            Assert.That(camera.GetType().GetProperty("PresentationTarget").GetValue(camera), Is.SameAs(actorVisual));
+            float deadline = Time.realtimeSinceStartup + 5;
+            while ((bool)controller.GetType().GetProperty("IsCombatAnimating").GetValue(controller)
+                && Time.realtimeSinceStartup < deadline)
+            {
+                yield return null;
+                if (!(bool)controller.GetType().GetProperty("IsCombatAnimating").GetValue(controller)) break;
+                Assert.That(camera.transform.position.x, Is.EqualTo(actorVisual.position.x).Within(.01f));
+                Assert.That(camera.transform.position.y, Is.EqualTo(actorVisual.position.y).Within(.01f));
+                Assert.That(camera.GetType().GetProperty("CanNavigate").GetValue(camera), Is.False);
+            }
+            Assert.That(controller.GetType().GetProperty("IsCombatAnimating").GetValue(controller), Is.False);
+            Assert.That(Get(camera, "is_following"), Is.False, "Completed combat must release camera navigation.");
+            Assert.That(camera.GetType().GetProperty("PresentationTarget").GetValue(camera), Is.Null);
         }
         finally
         {
@@ -133,17 +151,34 @@ public class BotIntegrationTests
     [UnityTest]
     public IEnumerator BotCanControlFirstPlayerAndPausesItsMovementInMenu()
     {
+        // A random map can produce a stationary action or movement too short to
+        // observe. Confirm a three-step route before testing the runner's pause.
+        ((Behaviour)Runner).enabled = false;
+        var saved = Snapshot(); var savedState = Get(saved, "controller");
+        foreach (object tile in (IList)Get(Get(savedState, "gameMap"), "serializedTiles"))
+        {
+            Set(tile, "tileName", "Grass field"); Set(tile, "hasCastle", false);
+            Set(tile, "castleTeam", ""); Set(tile, "hasStorm", false);
+        }
+        for (int player = 0; player < 2; player++)
+        {
+            var leader = ((IList)Get(((IList)Get(savedState, "teams"))[player], "units"))[0];
+            Set(leader, "positionX", player == 0 ? 2 : 8); Set(leader, "positionY", player == 0 ? 2 : 8);
+            if (player == 0) { Set(leader, "movement", 3); Set(leader, "hasMoved", false); }
+        }
+        Assert.That(Load(saved, out string error), Is.True, error);
         Set(Teams[0], "isBot", true); Set(Runner, "delay", 0f); Set(Runner, "actionDelay", 0f);
-        float deadline = Time.realtimeSinceStartup + 15;
-        while (!(bool)Runner.GetType().GetProperty("IsAnimating").GetValue(Runner) && State().Turn == 0
-            && Time.realtimeSinceStartup < deadline) yield return null;
+        var first = State().Players[0].Units[0];
+        var action = new MatchAction(MatchActionKind.Wait, new UnitKey(0, first.Id), new GridPosition(5, 2));
+        Runner.GetType().GetMethod("Execute", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(Runner, new object[] { action });
         Assert.That(Runner.GetType().GetProperty("IsAnimating").GetValue(Runner), Is.True);
         var actor = (Component)Get(Runner, "animatedUnit");
+        ((Behaviour)Runner).enabled = true;
         Call(controller, "Show_Menu"); var pausedPosition = actor.transform.position;
         yield return new WaitForSecondsRealtime(.25f);
         Assert.That(actor.transform.position, Is.EqualTo(pausedPosition));
         Call(controller, "Hide_Menu");
-        deadline = Time.realtimeSinceStartup + 15;
+        float deadline = Time.realtimeSinceStartup + 15;
         while (State().Turn == 0 && Time.realtimeSinceStartup < deadline) yield return null;
         Assert.That(State().Turn, Is.EqualTo(1));
         Assert.That(Get(Teams[1], "isBot"), Is.False);

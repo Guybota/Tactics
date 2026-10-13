@@ -43,6 +43,17 @@
 /memoryprofiler/
 /[Rr]ecordings/
 /BotValidationResults/
+/Assets/InitTestScene*.unity
+/Assets/InitTestScene*.unity.meta
+/Assets/_Recovery/
+/Assets/_Recovery.meta
+/Assets/Screenshots/
+/Assets/Screenshots.meta
+/Tools/OnlineScreenshots/
+/Assets/Resources/PerformanceTestRunInfo.json
+/Assets/Resources/PerformanceTestRunInfo.json.meta
+/Assets/Resources/PerformanceTestRunSettings.json
+/Assets/Resources/PerformanceTestRunSettings.json.meta
 
 # OS metadata
 .DS_Store

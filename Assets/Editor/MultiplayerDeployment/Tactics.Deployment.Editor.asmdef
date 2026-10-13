@@ -1,0 +1,11 @@
+{
+  "name": "Tactics.Deployment.Editor",
+  "references": [
+    "Tactics.Core",
+    "Tactics.Online",
+    "Unity.Services.Core.Editor",
+    "Unity.Services.Core.Environments.Editor"
+  ],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}
